@@ -3014,7 +3014,20 @@ document.addEventListener('click', e => {
 });
 
 // ===================== INIT =====================
-renderBlog();
+// Load blog from JSON (generated daily by GitHub Action), fallback to hardcoded
+(async () => {
+  try {
+    const res = await fetch('blog-posts.json?v=' + Date.now());
+    if (res.ok) {
+      const posts = await res.json();
+      if (Array.isArray(posts) && posts.length) {
+        CMS_ARTICLES.length = 0;
+        posts.forEach(p => CMS_ARTICLES.push(p));
+      }
+    }
+  } catch(e) {}
+  renderBlog();
+})();
 fetchMarketData();
 fetchGlobalData();
 fetchFXRates();

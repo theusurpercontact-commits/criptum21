@@ -1,0 +1,32 @@
+name: Generate Blog Post
+
+on:
+  schedule:
+    - cron: '0 11 * * *'   # 11:00 UTC = 8am Chile / 6am México
+  workflow_dispatch:         # permite disparar manualmente desde GitHub Actions
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate blog post
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node scripts/generate-blog.js
+
+      - name: Commit and push
+        run: |
+          git config user.name "Criptum21 Bot"
+          git config user.email "bot@criptum21.netlify.app"
+          git add blog-posts.json
+          git diff --staged --quiet || git commit -m "Blog: nuevo post automatico $(date +%Y-%m-%d)"
+          git push
