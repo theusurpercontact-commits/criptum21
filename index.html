@@ -10,7 +10,7 @@
   <meta property="og:type" content="website" />
   <meta name="robots" content="index, follow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
@@ -33,7 +33,7 @@
       --red-dim: rgba(255,77,106,0.12);
       --amber: #ffb830;
       --amber-dim: rgba(255,184,48,0.12);
-      --font-head: 'Syne', sans-serif;
+      --font-head: 'Space Grotesk', sans-serif;
       --font-body: 'DM Sans', sans-serif;
       --r: 12px;
       --r2: 20px;
@@ -60,7 +60,7 @@
     }
     .nav-logo {
       font-family: var(--font-head);
-      font-size: 1.3rem; font-weight: 800;
+      font-size: 1.3rem; font-weight: 700;
       background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       text-decoration: none;
@@ -144,7 +144,7 @@
     .hero-title {
       font-family: var(--font-head);
       font-size: clamp(2.2rem, 5vw, 3.6rem);
-      font-weight: 800; line-height: 1.08;
+      font-weight: 700; line-height: 1.08;
       margin-bottom: 1.2rem;
     }
     .hero-title em { font-style: normal; color: var(--accent); }
@@ -334,7 +334,7 @@
     .exchange-logo {
       width: 48px; height: 48px; border-radius: 12px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 22px; font-weight: 800; color: #fff;
+      font-size: 22px; font-weight: 700; color: #fff;
       font-family: var(--font-head);
     }
     .exchange-name { font-weight: 600; font-size: 15px; }
@@ -401,7 +401,7 @@
       border: 1px solid rgba(124,92,252,0.2);
       border-radius: var(--r2); padding: 3rem; text-align: center; margin: 2rem 0;
     }
-    .newsletter-title { font-family: var(--font-head); font-size: 1.8rem; font-weight: 800; margin-bottom: .75rem; }
+    .newsletter-title { font-family: var(--font-head); font-size: 1.8rem; font-weight: 700; margin-bottom: .75rem; }
     .newsletter-sub { color: var(--text2); margin-bottom: 1.75rem; }
     .newsletter-form { display: flex; gap: 10px; max-width: 480px; margin: 0 auto; }
     .newsletter-input {
@@ -676,7 +676,7 @@
     .compare-logo {
       width: 36px; height: 36px; border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 16px; font-weight: 800; color: #fff; flex-shrink: 0;
+      font-size: 16px; font-weight: 700; color: #fff; flex-shrink: 0;
       font-family: var(--font-head);
     }
     .compare-name { font-weight: 500; font-size: 14px; }
@@ -705,7 +705,7 @@
       text-transform: uppercase; color: var(--accent); margin-bottom: .5rem;
     }
     .article-modal-title {
-      font-family: var(--font-head); font-size: 1.6rem; font-weight: 800;
+      font-family: var(--font-head); font-size: 1.6rem; font-weight: 700;
       line-height: 1.15; margin-bottom: .75rem;
     }
     .article-modal-meta { font-size: 13px; color: var(--text3); display: flex; gap: 16px; flex-wrap: wrap; }
@@ -786,7 +786,7 @@
     .affiliate-float-logo {
       width: 40px; height: 40px; border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 18px; font-weight: 800; color: #fff;
+      font-size: 18px; font-weight: 700; color: #fff;
       font-family: var(--font-head); flex-shrink: 0;
     }
     .affiliate-float-text { flex: 1; }
@@ -935,7 +935,7 @@
           </div>
           <div class="hero-chart-area">
             <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:1rem;">
-              <span id="hero-price" style="font-family:var(--font-head);font-size:1.5rem;font-weight:800;">—</span>
+              <span id="hero-price" style="font-family:var(--font-head);font-size:1.5rem;font-weight:700;">—</span>
               <span id="hero-change" class="pill up">—</span>
             </div>
             <div class="hero-chart-wrap"><canvas id="hero-chart"></canvas></div>
@@ -1322,7 +1322,7 @@
           <div style="font-size:13px;color:var(--text3);" id="detail-symbol"></div>
         </div>
         <div style="margin-left:1rem;">
-          <div style="font-family:var(--font-head);font-size:1.5rem;font-weight:800;" id="detail-price"></div>
+          <div style="font-family:var(--font-head);font-size:1.5rem;font-weight:700;" id="detail-price"></div>
           <div style="font-size:13px;margin-top:2px;" id="detail-change"></div>
         </div>
         <button class="detail-close" onclick="closeDetail()"><i class="fas fa-times"></i></button>
