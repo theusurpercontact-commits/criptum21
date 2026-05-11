@@ -36,16 +36,16 @@
   <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
   <style>
     :root {
-      --bg: #0a0a0f;
-      --bg2: #111118;
-      --bg3: #16161f;
-      --surface: #1c1c28;
-      --surface2: #22222f;
+      --bg: #07070d;
+      --bg2: #0e0e18;
+      --bg3: #13131e;
+      --surface: #181824;
+      --surface2: #1e1e2c;
       --border: rgba(255,255,255,0.06);
-      --border2: rgba(255,255,255,0.10);
+      --border2: rgba(255,255,255,0.11);
       --text: #f0f0f5;
       --text2: #9898b0;
-      --text3: #7878a0;
+      --text3: #6868a0;
       --accent: #7c5cfc;
       --accent2: #5b3fcc;
       --green: #00d084;
@@ -58,6 +58,8 @@
       --font-body: 'DM Sans', sans-serif;
       --r: 12px;
       --r2: 20px;
+      --glow: 0 0 60px rgba(124,92,252,0.18);
+      --glow-sm: 0 0 30px rgba(124,92,252,0.14);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -137,67 +139,125 @@
     section { padding: 5rem 0; }
     .section-label {
       font-size: 11px; font-weight: 600;
-      letter-spacing: .12em; text-transform: uppercase;
-      color: var(--accent); margin-bottom: .5rem;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: .6rem;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .section-label::before {
+      content: ''; display: inline-block;
+      width: 16px; height: 2px; border-radius: 2px;
+      background: var(--accent);
     }
     .section-title {
       font-family: var(--font-head);
-      font-size: clamp(1.6rem, 4vw, 2.4rem);
-      font-weight: 700; line-height: 1.15;
-      margin-bottom: 1rem;
+      font-size: clamp(1.7rem, 4vw, 2.5rem);
+      font-weight: 700; line-height: 1.12;
+      margin-bottom: 1rem; letter-spacing: -0.02em;
     }
-    .section-sub { color: var(--text2); max-width: 560px; margin-bottom: 2.5rem; }
+    .section-title .grad-text {
+      background: linear-gradient(135deg, #a78bfa 0%, #7c5cfc 50%, #38bdf8 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .section-sub { color: var(--text2); max-width: 560px; margin-bottom: 2.5rem; line-height: 1.65; }
 
     /* HERO */
     .hero {
       padding: 5rem 0 3rem;
-      background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(124,92,252,0.18) 0%, transparent 70%);
+      position: relative; overflow: hidden;
+      background: radial-gradient(ellipse 100% 80% at 50% -20%, rgba(124,92,252,0.22) 0%, transparent 65%);
     }
-    .hero-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0; pointer-events: none;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.035) 1px, transparent 1px);
+      background-size: 36px 36px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+    }
+    .hero-orb {
+      position: absolute; border-radius: 50%;
+      pointer-events: none; filter: blur(80px);
+    }
+    .hero-orb-1 {
+      width: 700px; height: 700px;
+      background: rgba(124,92,252,0.12);
+      top: -300px; left: -150px;
+      animation: orbDrift 12s ease-in-out infinite;
+    }
+    .hero-orb-2 {
+      width: 500px; height: 500px;
+      background: rgba(0,208,132,0.07);
+      top: -50px; right: -150px;
+      animation: orbDrift 16s ease-in-out infinite reverse;
+    }
+    .hero-orb-3 {
+      width: 300px; height: 300px;
+      background: rgba(124,92,252,0.08);
+      bottom: -100px; left: 40%;
+      animation: orbDrift 10s ease-in-out infinite 2s;
+    }
+    @keyframes orbDrift {
+      0%,100% { transform: translate(0,0) scale(1); }
+      33%  { transform: translate(30px,-20px) scale(1.04); }
+      66%  { transform: translate(-20px,15px) scale(.97); }
+    }
+    .hero-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; position: relative; z-index: 1; }
     .hero-tag {
       display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(124,92,252,0.15); border: 1px solid rgba(124,92,252,0.3);
-      color: #b89fff; padding: 5px 14px; border-radius: 100px;
+      background: rgba(124,92,252,0.12); border: 1px solid rgba(124,92,252,0.28);
+      color: #c4b0ff; padding: 5px 14px; border-radius: 100px;
       font-size: 13px; margin-bottom: 1.5rem;
+      backdrop-filter: blur(8px);
     }
     .hero-tag-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
     @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
     .hero-title {
       font-family: var(--font-head);
-      font-size: clamp(2.2rem, 5vw, 3.6rem);
-      font-weight: 700; line-height: 1.08;
-      margin-bottom: 1.2rem;
+      font-size: clamp(2.4rem, 5.5vw, 4rem);
+      font-weight: 700; line-height: 1.05;
+      margin-bottom: 1.2rem; letter-spacing: -0.02em;
     }
-    .hero-title em { font-style: normal; color: var(--accent); }
-    .hero-sub { color: var(--text2); font-size: 1.05rem; margin-bottom: 2rem; max-width: 480px; }
+    .hero-title em { font-style: normal; }
+    .grad-text {
+      background: linear-gradient(135deg, #a78bfa 0%, #7c5cfc 40%, #38bdf8 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub { color: var(--text2); font-size: 1.05rem; margin-bottom: 2rem; max-width: 480px; line-height: 1.65; }
     .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
     .btn-primary {
-      background: var(--accent); color: #fff;
-      padding: 13px 28px; border-radius: 10px;
-      font-size: 15px; font-weight: 500;
+      background: linear-gradient(135deg, #7c5cfc 0%, #6b4ce6 100%);
+      color: #fff; padding: 13px 28px; border-radius: 10px;
+      font-size: 15px; font-weight: 600;
       text-decoration: none; border: none; cursor: pointer;
       transition: transform .15s, box-shadow .15s;
       display: inline-flex; align-items: center; gap: 8px;
+      box-shadow: 0 4px 20px rgba(124,92,252,0.3);
     }
-    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 32px rgba(124,92,252,0.35); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(124,92,252,0.5); }
     .btn-outline {
-      background: transparent;
+      background: rgba(255,255,255,0.04);
       border: 1px solid var(--border2); color: var(--text);
       padding: 13px 28px; border-radius: 10px;
       font-size: 15px; font-weight: 400;
       text-decoration: none; cursor: pointer;
-      transition: border-color .2s, background .2s;
+      transition: border-color .2s, background .2s, box-shadow .2s;
       display: inline-flex; align-items: center; gap: 8px;
+      backdrop-filter: blur(8px);
     }
-    .btn-outline:hover { border-color: var(--accent); background: rgba(124,92,252,0.08); }
+    .btn-outline:hover { border-color: rgba(124,92,252,0.5); background: rgba(124,92,252,0.08); box-shadow: 0 0 20px rgba(124,92,252,0.12); }
 
     /* HERO CARD */
     .hero-card {
-      background: var(--surface);
-      border: 1px solid var(--border2);
+      background: linear-gradient(160deg, var(--surface) 0%, var(--surface2) 100%);
+      border: 1px solid transparent;
+      background-clip: padding-box;
       border-radius: var(--r2);
       overflow: hidden;
       max-height: 340px;
+      box-shadow: var(--glow), 0 24px 60px rgba(0,0,0,0.4);
+      outline: 1px solid rgba(124,92,252,0.2);
+      outline-offset: -1px;
     }
     .hero-card-header {
       padding: 1rem 1.25rem;
@@ -216,14 +276,23 @@
     .stats-bar {
       display: grid; grid-template-columns: repeat(4, 1fr);
       gap: 1px; background: var(--border);
-      border: 1px solid var(--border); border-radius: var(--r);
+      border: 1px solid rgba(124,92,252,0.15); border-radius: var(--r);
       overflow: hidden; margin-bottom: 3rem;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
     }
     .stat-cell {
       background: var(--bg2); padding: 1.2rem 1.5rem;
+      transition: background .2s;
     }
+    .stat-cell:hover { background: var(--bg3); }
+    .stat-icon { font-size: 16px; color: var(--accent); margin-bottom: 6px; opacity: 0.8; }
     .stat-label { font-size: 12px; color: var(--text3); margin-bottom: 4px; }
-    .stat-value { font-family: var(--font-head); font-size: 1.4rem; font-weight: 700; }
+    .stat-value {
+      font-family: var(--font-head); font-size: 1.4rem; font-weight: 700;
+      background: linear-gradient(135deg, #f0f0f5 0%, #c4b0ff 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
     .stat-sub { font-size: 12px; color: var(--text3); margin-top: 2px; }
 
     /* CRYPTO TABLE */
@@ -300,10 +369,17 @@
     .calc-card {
       background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--r2); padding: 1.75rem; overflow: hidden;
+      transition: border-color .25s, box-shadow .25s, transform .25s;
+    }
+    .calc-card:hover {
+      border-color: rgba(124,92,252,0.35);
+      box-shadow: 0 0 0 1px rgba(124,92,252,0.12), 0 16px 48px rgba(0,0,0,0.35);
+      transform: translateY(-3px);
     }
     .calc-icon {
       width: 44px; height: 44px; border-radius: 12px;
-      background: rgba(124,92,252,0.15);
+      background: linear-gradient(135deg, rgba(124,92,252,0.25) 0%, rgba(124,92,252,0.08) 100%);
+      border: 1px solid rgba(124,92,252,0.2);
       display: flex; align-items: center; justify-content: center;
       font-size: 20px; margin-bottom: 1.2rem;
     }
@@ -343,13 +419,17 @@
       background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--r2); padding: 1.5rem;
       display: flex; flex-direction: column; gap: 1rem;
-      transition: border-color .2s, transform .2s;
+      transition: border-color .25s, transform .25s, box-shadow .25s;
     }
-    .affiliate-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+    .affiliate-card:hover {
+      border-color: rgba(124,92,252,0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.35), 0 0 0 1px rgba(124,92,252,0.1);
+    }
     .affiliate-card.featured {
-      border-color: rgba(124,92,252,0.5);
+      border-color: rgba(124,92,252,0.45);
       border-top: 2px solid var(--accent);
-      box-shadow: 0 0 40px rgba(124,92,252,0.08);
+      box-shadow: var(--glow-sm), 0 8px 32px rgba(0,0,0,0.3);
     }
     .affiliate-header { display: flex; align-items: center; gap: 12px; }
     .exchange-logo {
@@ -393,10 +473,14 @@
     .blog-card {
       background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--r2); overflow: hidden;
-      cursor: pointer; transition: border-color .2s, transform .2s;
+      cursor: pointer; transition: border-color .25s, transform .25s, box-shadow .25s;
       text-decoration: none; color: inherit; display: block;
     }
-    .blog-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+    .blog-card:hover {
+      border-color: rgba(124,92,252,0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.35), 0 0 0 1px rgba(124,92,252,0.08);
+    }
     .blog-img {
       height: 100px; display: flex; align-items: center; justify-content: center;
       font-size: 2rem; position: relative; overflow: hidden;
@@ -418,12 +502,23 @@
 
     /* NEWSLETTER */
     .newsletter-section {
-      background: linear-gradient(135deg, rgba(124,92,252,0.15) 0%, rgba(91,63,204,0.08) 100%);
-      border: 1px solid rgba(124,92,252,0.2);
-      border-radius: var(--r2); padding: 3rem; text-align: center; margin: 2rem 0;
+      background: linear-gradient(var(--surface), var(--surface)) padding-box,
+                  linear-gradient(135deg, rgba(124,92,252,0.5) 0%, rgba(56,189,248,0.2) 50%, rgba(0,208,132,0.3) 100%) border-box;
+      border: 1px solid transparent;
+      border-radius: var(--r2); padding: 3.5rem 3rem; text-align: center; margin: 2rem 0;
+      position: relative; overflow: hidden;
+      box-shadow: var(--glow-sm), 0 8px 40px rgba(0,0,0,0.3);
     }
-    .newsletter-title { font-family: var(--font-head); font-size: 1.8rem; font-weight: 700; margin-bottom: .75rem; }
-    .newsletter-sub { color: var(--text2); margin-bottom: 1.75rem; }
+    .newsletter-section::before {
+      content: '';
+      position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(124,92,252,0.1) 0%, transparent 70%);
+    }
+    .newsletter-title {
+      font-family: var(--font-head); font-size: 1.9rem; font-weight: 700; margin-bottom: .75rem;
+      position: relative;
+    }
+    .newsletter-sub { color: var(--text2); margin-bottom: 1.75rem; position: relative; }
     .newsletter-form { display: flex; gap: 10px; max-width: 480px; margin: 0 auto; }
     .newsletter-input {
       flex: 1; background: var(--bg2); border: 1px solid var(--border2);
@@ -924,9 +1019,12 @@
 
     /* FEAR & GREED */
     .fng-wrap {
-      background: var(--surface); border: 1px solid var(--border2);
+      background: linear-gradient(var(--surface), var(--surface)) padding-box,
+                  linear-gradient(135deg, rgba(124,92,252,0.4) 0%, rgba(0,208,132,0.15) 50%, rgba(124,92,252,0.2) 100%) border-box;
+      border: 1px solid transparent;
       border-radius: var(--r2); padding: 1.75rem 2rem;
       display: flex; align-items: center; gap: 2.5rem;
+      box-shadow: var(--glow-sm), 0 8px 32px rgba(0,0,0,0.3);
     }
     .fng-left { flex-shrink: 0; }
     .fng-label { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
@@ -951,8 +1049,11 @@
 
     /* CONVERSOR RÁPIDO */
     .conv-quick-wrap {
-      background: var(--surface); border: 1px solid var(--border2);
+      background: linear-gradient(var(--surface), var(--surface)) padding-box,
+                  linear-gradient(135deg, rgba(0,208,132,0.2) 0%, rgba(124,92,252,0.3) 50%, rgba(56,189,248,0.15) 100%) border-box;
+      border: 1px solid transparent;
       border-radius: var(--r2); padding: 1.75rem 2rem;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
     }
     .conv-quick-row { display: flex; gap: 1.5rem; align-items: flex-start; flex-wrap: wrap; }
     .conv-quick-input-group { display: flex; flex-direction: column; gap: .75rem; min-width: 200px; }
@@ -1038,11 +1139,14 @@
 
   <!-- HERO -->
   <section class="hero">
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-orb hero-orb-3"></div>
     <div class="container">
       <div class="hero-inner">
         <div>
           <div class="hero-tag"><span class="hero-tag-dot"></span> Precios actualizados en tiempo real</div>
-          <h1 class="hero-title">Tu plataforma de<br><em>finanzas cripto</em><br>en español</h1>
+          <h1 class="hero-title">Tu plataforma de<br><em class="grad-text">finanzas cripto</em><br>en español</h1>
           <p class="hero-sub">Precios en vivo, calculadoras de inversión y guías para invertir desde Chile, México, Colombia y toda Latinoamérica.</p>
           <div class="hero-actions">
             <a href="#mercado" class="btn-primary"><i class="fas fa-chart-line"></i> Ver mercado</a>
@@ -1070,21 +1174,25 @@
   <div class="container">
     <div class="stats-bar">
       <div class="stat-cell">
+        <div class="stat-icon"><i class="fas fa-globe"></i></div>
         <div class="stat-label">Cap. de mercado total</div>
         <div class="stat-value" id="stat-mcap">—</div>
         <div class="stat-sub">Mercado global</div>
       </div>
       <div class="stat-cell">
+        <div class="stat-icon"><i class="fas fa-bolt"></i></div>
         <div class="stat-label">Volumen 24h</div>
         <div class="stat-value" id="stat-vol">—</div>
         <div class="stat-sub">Todas las monedas</div>
       </div>
       <div class="stat-cell">
+        <div class="stat-icon"><i class="fab fa-bitcoin"></i></div>
         <div class="stat-label">Dominancia BTC</div>
         <div class="stat-value" id="stat-dom">—</div>
         <div class="stat-sub">Del mercado total</div>
       </div>
       <div class="stat-cell">
+        <div class="stat-icon"><i class="fas fa-coins"></i></div>
         <div class="stat-label">Monedas activas</div>
         <div class="stat-value" id="stat-coins">—</div>
         <div class="stat-sub">En seguimiento</div>
@@ -1174,7 +1282,7 @@
   <section id="mercado">
     <div class="container">
       <div class="section-label">Mercado</div>
-      <div class="section-title">Precios en tiempo real</div>
+      <div class="section-title">Precios <span class="grad-text">en tiempo real</span></div>
       <p class="section-sub">Las principales criptomonedas actualizadas al instante. Datos de CoinGecko.</p>
 
       <div class="crypto-table-wrap">
@@ -1221,7 +1329,7 @@
   <section id="calculadoras" style="background: var(--bg2); margin: 0; padding: 4rem 0;">
     <div class="container">
       <div class="section-label">Herramientas</div>
-      <div class="section-title">Calculadoras financieras</div>
+      <div class="section-title">Calculadoras <span class="grad-text">financieras</span></div>
       <p class="section-sub">Simula tus inversiones antes de tomar decisiones. Gratis y sin registro.</p>
 
       <div class="calc-grid">
@@ -1551,7 +1659,7 @@
   <section id="exchanges">
     <div class="container">
       <div class="section-label">Exchanges recomendados</div>
-      <div class="section-title">¿Dónde comprar cripto en LATAM?</div>
+      <div class="section-title">¿Dónde comprar <span class="grad-text">cripto en LATAM</span>?</div>
       <p class="section-sub">Plataformas verificadas con buen soporte en español y opciones de depósito local.</p>
 
       <div class="affiliate-grid">
@@ -1660,7 +1768,7 @@
   <section id="blog" style="background: var(--bg2); margin: 0; padding: 4rem 0;">
     <div class="container">
       <div class="section-label">Blog & Guías SEO</div>
-      <div class="section-title">Aprende a invertir en cripto</div>
+      <div class="section-title">Aprende a <span class="grad-text">invertir en cripto</span></div>
       <p class="section-sub">Guías en español para todos los niveles. Desde qué es Bitcoin hasta estrategias avanzadas de DeFi para Chile, México y Colombia.</p>
 
       <!-- Filtros de categoría -->
