@@ -3040,7 +3040,7 @@ function _rssSlug(title) {
 
 async function fetchCoinTelegraphNews() {
   const url = 'https://api.rss2json.com/v1/api.json?rss_url=' +
-    encodeURIComponent('https://es.cointelegraph.com/rss') + '&count=15';
+    encodeURIComponent('https://www.criptonoticias.com/feed/');
   try {
     const res = await fetch(url);
     if (!res.ok) throw new Error();
