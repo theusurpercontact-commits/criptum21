@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Precio Bitcoin en México hoy en Pesos (MXN) | Criptum21</title>
+  <meta name="description" content="Precio de Bitcoin en México en tiempo real en pesos mexicanos (MXN). ¿Cuánto vale 1 Bitcoin hoy? Conversor BTC/MXN, gráfico actualizado y guía para comprar Bitcoin en México." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://criptum21.netlify.app/precio-bitcoin-mexico.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Precio Bitcoin en México hoy en Pesos (MXN)" />
+  <meta property="og:description" content="Precio de Bitcoin en pesos mexicanos en tiempo real. Conversor BTC/MXN y guía para comprar en México." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://criptum21.netlify.app/precio-bitcoin-mexico.html" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #0a0a0f; --bg2: #111118; --bg3: #16161f;
+      --surface: #1c1c28; --surface2: #22222f;
+      --border: rgba(255,255,255,0.06); --border2: rgba(255,255,255,0.10);
+      --text: #f0f0f5; --text2: #9898b0; --text3: #5c5c78;
+      --accent: #7c5cfc; --accent2: #5b3fcc;
+      --green: #00d084; --green-dim: rgba(0,208,132,0.12);
+      --red: #ff4d6a; --red-dim: rgba(255,77,106,0.12);
+      --amber: #ffb830; --amber-dim: rgba(255,184,48,0.12);
+      --btc: #f7931a;
+      --font-head: 'Syne', sans-serif; --font-body: 'DM Sans', sans-serif;
+      --r: 12px; --r2: 20px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 15px; line-height: 1.6; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(10,10,15,0.9); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; height: 64px;
+    }
+    .nav-logo {
+      font-family: var(--font-head); font-size: 1.3rem; font-weight: 800;
+      background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+    .nav-back {
+      display: flex; align-items: center; gap: 6px;
+      color: var(--text2); text-decoration: none; font-size: 14px;
+      transition: color .2s;
+    }
+    .nav-back:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--btc); color: #fff;
+      padding: 8px 20px; border-radius: 8px;
+      font-size: 14px; font-weight: 500; text-decoration: none;
+      transition: opacity .2s;
+    }
+    .nav-cta:hover { opacity: .85; }
+    @media (max-width: 600px) {
+      nav { padding: 0 1rem; }
+      .nav-back span { display: none; }
+      .nav-cta { display: none; }
+    }
+
+    /* LAYOUT */
+    .wrapper { padding-top: 80px; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+    section { padding: 3rem 0; }
+
+    /* BREADCRUMB */
+    .breadcrumb {
+      font-size: 13px; color: var(--text3); padding: 1rem 0;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .breadcrumb a { color: var(--text3); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--accent); }
+
+    /* HERO */
+    .hero { padding: 2rem 0 3rem; background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(247,147,26,0.12) 0%, transparent 70%); }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(247,147,26,0.12); border: 1px solid rgba(247,147,26,0.3);
+      color: #f7931a; padding: 5px 14px; border-radius: 100px;
+      font-size: 13px; margin-bottom: 1.25rem;
+    }
+    .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+    h1 {
+      font-family: var(--font-head); font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 800; line-height: 1.1; margin-bottom: 2rem;
+    }
+    h1 em { font-style: normal; color: var(--btc); }
+
+    /* PRICE DISPLAY */
+    .price-display {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1.5rem; margin-bottom: 2rem;
+    }
+    @media (max-width: 600px) { .price-display { grid-template-columns: 1fr; } }
+    .price-card {
+      background: var(--surface); border: 1px solid var(--border2);
+      border-radius: var(--r2); padding: 1.75rem;
+    }
+    .price-card-label { font-size: 12px; color: var(--text3); text-transform: uppercase; letter-spacing: .08em; margin-bottom: .5rem; }
+    .price-mxn {
+      font-family: var(--font-head); font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800; color: var(--btc); line-height: 1.1; margin-bottom: .4rem;
+    }
+    .price-usd { font-size: 1rem; color: var(--text2); margin-bottom: .75rem; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 3px;
+      padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 500;
+    }
+    .pill.up { background: var(--green-dim); color: var(--green); }
+    .pill.down { background: var(--red-dim); color: var(--red); }
+    .stats-mini { display: flex; flex-direction: column; gap: .5rem; margin-top: 1rem; }
+    .stat-mini-row { display: flex; justify-content: space-between; font-size: 13px; }
+    .stat-mini-row span:first-child { color: var(--text3); }
+    .stat-mini-row span:last-child { font-weight: 500; }
+
+    /* CONVERTER */
+    .converter-card {
+      background: var(--surface); border: 1px solid var(--border2);
+      border-radius: var(--r2); padding: 1.75rem;
+    }
+    .conv-title { font-family: var(--font-head); font-size: 1.1rem; font-weight: 700; margin-bottom: 1.25rem; }
+    .conv-row { display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: center; }
+    @media (max-width: 500px) { .conv-row { grid-template-columns: 1fr; } .conv-arrow { display: none; } }
+    .conv-group label { font-size: 12px; color: var(--text2); display: block; margin-bottom: 6px; }
+    .conv-input {
+      width: 100%; background: var(--bg3); border: 1px solid var(--border2);
+      color: var(--text); padding: 12px 14px; border-radius: 10px;
+      font-size: 1.1rem; font-family: var(--font-head); font-weight: 600;
+      outline: none; transition: border-color .2s;
+    }
+    .conv-input:focus { border-color: var(--btc); }
+    .conv-arrow { color: var(--text3); font-size: 1.2rem; text-align: center; }
+    .conv-rate { font-size: 12px; color: var(--text3); margin-top: .75rem; text-align: center; }
+
+    /* CHART */
+    .chart-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r2); padding: 1.5rem; margin-top: 1.5rem;
+    }
+    .chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; flex-wrap: wrap; gap: 10px; }
+    .chart-title { font-family: var(--font-head); font-size: 1rem; font-weight: 700; }
+    .tf-tabs { display: flex; gap: 4px; }
+    .tf-tab {
+      padding: 5px 12px; border-radius: 6px; font-size: 12px;
+      cursor: pointer; border: none; background: transparent;
+      color: var(--text2); transition: all .15s; font-family: var(--font-body);
+    }
+    .tf-tab.active { background: var(--btc); color: #fff; }
+    .tf-tab:hover:not(.active) { background: var(--surface2); }
+    .chart-wrap { position: relative; height: 280px; }
+
+    /* SECTION TITLES */
+    .section-label { font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--btc); margin-bottom: .4rem; }
+    .section-title { font-family: var(--font-head); font-size: clamp(1.3rem, 3vw, 1.8rem); font-weight: 700; margin-bottom: 1rem; }
+    .section-sub { color: var(--text2); margin-bottom: 2rem; }
+
+    /* WHERE TO BUY */
+    .buy-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; }
+    .buy-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r2); padding: 1.5rem;
+      display: flex; flex-direction: column; gap: .85rem;
+      transition: border-color .2s, transform .2s;
+    }
+    .buy-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+    .buy-card.featured { border-color: rgba(247,147,26,0.4); }
+    .buy-header { display: flex; align-items: center; gap: 12px; }
+    .buy-logo {
+      width: 44px; height: 44px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 800; color: #fff; font-family: var(--font-head); flex-shrink: 0;
+    }
+    .buy-name { font-weight: 600; font-size: 15px; }
+    .buy-sub { font-size: 12px; color: var(--text3); }
+    .buy-badge {
+      margin-left: auto; font-size: 11px; font-weight: 600;
+      padding: 3px 10px; border-radius: 100px;
+      background: rgba(247,147,26,0.15); color: var(--btc);
+      border: 1px solid rgba(247,147,26,0.25);
+    }
+    .buy-features { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+    .buy-features li { font-size: 13px; color: var(--text2); display: flex; align-items: center; gap: 7px; }
+    .buy-features li i { color: var(--green); font-size: 12px; }
+    .buy-btn {
+      display: block; text-align: center; text-decoration: none;
+      padding: 11px; border-radius: 8px; font-size: 14px; font-weight: 500;
+      border: 1px solid var(--border2); color: var(--text);
+      transition: all .2s;
+    }
+    .buy-btn:hover { background: var(--btc); border-color: var(--btc); color: #fff; }
+    .buy-card.featured .buy-btn { background: var(--btc); border-color: var(--btc); color: #fff; }
+
+    /* FAQ */
+    .faq-list { display: flex; flex-direction: column; gap: 1rem; }
+    .faq-item {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r); overflow: hidden;
+    }
+    .faq-q {
+      padding: 1.1rem 1.25rem; font-weight: 500; font-size: 15px;
+      cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+      user-select: none;
+    }
+    .faq-q i { color: var(--text3); font-size: 13px; transition: transform .25s; flex-shrink: 0; margin-left: 1rem; }
+    .faq-item.open .faq-q i { transform: rotate(180deg); }
+    .faq-a {
+      max-height: 0; overflow: hidden;
+      transition: max-height .3s ease, padding .3s;
+      font-size: 14px; color: var(--text2); line-height: 1.7;
+    }
+    .faq-item.open .faq-a { max-height: 500px; padding: 0 1.25rem 1.25rem; }
+    .faq-a a { color: var(--btc); text-decoration: none; }
+    .faq-a a:hover { text-decoration: underline; }
+
+    /* BACK TO TOP */
+    .back-to-top {
+      position: fixed; bottom: 28px; right: 24px; z-index: 88;
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--surface2); border: 1px solid var(--border2);
+      color: var(--text2); cursor: pointer;
+      display: flex; align-items: center; justify-content: center; font-size: 15px;
+      opacity: 0; transform: translateY(10px); pointer-events: none;
+      transition: opacity .3s, transform .3s, background .2s;
+    }
+    .back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
+    .back-to-top:hover { background: var(--btc); border-color: var(--btc); color: #fff; }
+
+    /* FOOTER */
+    footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 2rem 0; margin-top: 2rem; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .footer-logo {
+      font-family: var(--font-head); font-size: 1.1rem; font-weight: 800;
+      background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { color: var(--text3); text-decoration: none; font-size: 13px; transition: color .2s; }
+    .footer-links a:hover { color: var(--text); }
+    .disclaimer { font-size: 11px; color: var(--text3); line-height: 1.5; padding-top: 1.5rem; border-top: 1px solid var(--border); margin-top: 1.5rem; }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: var(--bg); } ::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">⚡ Criptum21</a>
+  <a href="index.html" class="nav-back"><i class="fas fa-arrow-left"></i> <span>Volver al inicio</span></a>
+  <a href="index.html#exchanges" class="nav-cta"><i class="fab fa-bitcoin"></i> Comprar Bitcoin</a>
+</nav>
+
+<div class="wrapper">
+  <div class="container">
+
+    <!-- BREADCRUMB -->
+    <div class="breadcrumb">
+      <a href="index.html">Criptum21</a>
+      <i class="fas fa-chevron-right" style="font-size:10px;"></i>
+      <a href="index.html#mercado">Mercado</a>
+      <i class="fas fa-chevron-right" style="font-size:10px;"></i>
+      <span>Precio Bitcoin en México</span>
+    </div>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-tag"><span class="live-dot"></span> Precio actualizado en tiempo real</div>
+      <h1>Precio <em>Bitcoin</em> en<br>México hoy en MXN</h1>
+
+      <div class="price-display">
+        <!-- Precio principal -->
+        <div class="price-card">
+          <div class="price-card-label">1 Bitcoin (BTC) en pesos mexicanos</div>
+          <div class="price-mxn" id="price-mxn">Cargando...</div>
+          <div class="price-usd" id="price-usd"></div>
+          <span class="pill" id="price-change">—</span>
+          <div class="stats-mini" id="stats-mini"></div>
+        </div>
+
+        <!-- Converter -->
+        <div class="converter-card">
+          <div class="conv-title">Conversor BTC / MXN</div>
+          <div class="conv-row">
+            <div class="conv-group">
+              <label>Bitcoin (BTC)</label>
+              <input class="conv-input" type="number" id="input-btc" value="1" step="any" oninput="convertFromBTC()" />
+            </div>
+            <div class="conv-arrow"><i class="fas fa-right-left"></i></div>
+            <div class="conv-group">
+              <label>Pesos mexicanos (MXN)</label>
+              <input class="conv-input" type="number" id="input-mxn" step="any" oninput="convertFromMXN()" />
+            </div>
+          </div>
+          <div class="conv-rate" id="conv-rate">Cargando tasa...</div>
+        </div>
+      </div>
+
+      <!-- Chart -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div class="chart-title">Precio Bitcoin en México — Histórico</div>
+          <div class="tf-tabs">
+            <button class="tf-tab active" onclick="loadChart('1',this)">1D</button>
+            <button class="tf-tab" onclick="loadChart('7',this)">7D</button>
+            <button class="tf-tab" onclick="loadChart('30',this)">1M</button>
+            <button class="tf-tab" onclick="loadChart('365',this)">1A</button>
+          </div>
+        </div>
+        <div class="chart-wrap"><canvas id="btc-chart"></canvas></div>
+      </div>
+    </section>
+
+    <!-- DONDE COMPRAR -->
+    <section>
+      <div class="section-label">Exchanges recomendados</div>
+      <div class="section-title">¿Dónde comprar Bitcoin en México?</div>
+      <p class="section-sub">Plataformas verificadas que aceptan pesos mexicanos (MXN) con soporte en español.</p>
+
+      <div class="buy-grid">
+
+        <div class="buy-card featured">
+          <div class="buy-header">
+            <div class="buy-logo" style="background:linear-gradient(135deg,#00b2a9,#007f79);">B</div>
+            <div>
+              <div class="buy-name">Bitso</div>
+              <div class="buy-sub">🇲🇽 Exchange mexicano — depósito en MXN</div>
+            </div>
+            <span class="buy-badge">⭐ Top México</span>
+          </div>
+          <ul class="buy-features">
+            <li><i class="fas fa-check"></i> Depósito y retiro en pesos mexicanos (SPEI)</li>
+            <li><i class="fas fa-check"></i> Regulado por la CNBV (ITF) en México</li>
+            <li><i class="fas fa-check"></i> Más de 7 millones de usuarios en LATAM</li>
+            <li><i class="fas fa-check"></i> App móvil en español, fácil de usar</li>
+          </ul>
+          <a href="https://bitso.com/r?ref=criptum21" target="_blank" rel="noopener sponsored" class="buy-btn">
+            Abrir cuenta en Bitso <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+
+        <div class="buy-card">
+          <div class="buy-header">
+            <div class="buy-logo" style="background:linear-gradient(135deg,#f0b90b,#e8a500);">B</div>
+            <div>
+              <div class="buy-name">Binance</div>
+              <div class="buy-sub">🌎 Global — P2P con MXN disponible</div>
+            </div>
+          </div>
+          <ul class="buy-features">
+            <li><i class="fas fa-check"></i> Mayor liquidez del mundo</li>
+            <li><i class="fas fa-check"></i> P2P: compra con SPEI en pesos mexicanos</li>
+            <li><i class="fas fa-check"></i> Más de 350 criptomonedas</li>
+            <li><i class="fas fa-check"></i> Comisiones desde 0.1%</li>
+          </ul>
+          <a href="https://accounts.binance.com/register?ref=TUREFID" target="_blank" rel="noopener sponsored" class="buy-btn">
+            Abrir cuenta en Binance <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+
+        <div class="buy-card">
+          <div class="buy-header">
+            <div class="buy-logo" style="background:linear-gradient(135deg,#1c4ecb,#0f2e9a);">C</div>
+            <div>
+              <div class="buy-name">Coinbase</div>
+              <div class="buy-sub">🇺🇸 Exchange global con soporte en México</div>
+            </div>
+          </div>
+          <ul class="buy-features">
+            <li><i class="fas fa-check"></i> Plataforma regulada en EE.UU. y Europa</li>
+            <li><i class="fas fa-check"></i> Interfaz muy simple para principiantes</li>
+            <li><i class="fas fa-check"></i> Disponible en México (tarjeta y transferencia)</li>
+            <li><i class="fas fa-check"></i> App con modo educativo y recompensas</li>
+          </ul>
+          <a href="https://coinbase.com/join/criptum21" target="_blank" rel="noopener sponsored" class="buy-btn">
+            Abrir cuenta en Coinbase <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section>
+      <div class="section-label">Preguntas frecuentes</div>
+      <div class="section-title">Bitcoin en México — FAQ</div>
+
+      <div class="faq-list">
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)">
+            ¿Cuánto vale 1 Bitcoin en pesos mexicanos hoy?
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="faq-a" id="faq-precio-actual">
+            El precio actualizado aparece en tiempo real en la parte superior de esta página.
+            El valor en MXN se calcula multiplicando el precio en dólares (USD) por la tasa de cambio USD/MXN actual.
+            El precio de Bitcoin varía constantemente — esta página se actualiza cada 60 segundos.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)">
+            ¿Es legal comprar Bitcoin en México?
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="faq-a">
+            Sí, comprar y vender Bitcoin es legal en México. La <strong>Ley para Regular las Instituciones de Tecnología Financiera (Ley Fintech)</strong>
+            de 2018 regula a los exchanges que operan en el país. Plataformas como Bitso cuentan con autorización
+            de la CNBV. El SAT considera las ganancias por venta de criptomonedas como ingresos gravables, por lo
+            que deben declararse anualmente.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)">
+            ¿Cómo comprar Bitcoin con pesos mexicanos (MXN)?
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="faq-a">
+            El proceso más simple es:<br><br>
+            1. Crea una cuenta en <strong>Bitso</strong> (el exchange mexicano más popular).<br>
+            2. Verifica tu identidad con tu INE/pasaporte (proceso KYC).<br>
+            3. Deposita pesos mexicanos vía SPEI desde cualquier banco.<br>
+            4. Compra Bitcoin directamente en la plataforma.<br><br>
+            También puedes usar Binance P2P para comprar con transferencia SPEI a otros usuarios.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)">
+            ¿Puedo comprar menos de 1 Bitcoin en México?
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="faq-a">
+            Sí. Bitcoin es divisible hasta 8 decimales. La unidad mínima se llama <strong>satoshi</strong>
+            (0.00000001 BTC). En Bitso puedes comenzar con desde $100 MXN. No necesitas comprar
+            un Bitcoin completo — cualquier cantidad pequeña es válida.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)">
+            ¿Cuál es el mejor exchange para comprar Bitcoin en México?
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="faq-a">
+            Depende de tus necesidades:<br><br>
+            • <strong>Bitso</strong>: ideal para principiantes en México. Depósito y retiro vía SPEI, regulado por la CNBV y con millones de usuarios mexicanos.<br>
+            • <strong>Binance</strong>: mejor si quieres acceder a cientos de criptomonedas y mayor liquidez. Usa P2P para operar en MXN.<br>
+            • <strong>Coinbase</strong>: buena opción si prefieres una plataforma con alta reputación global y seguridad probada.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)">
+            ¿Cómo se calcula el precio de Bitcoin en pesos mexicanos?
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="faq-a">
+            El precio de Bitcoin se fija globalmente en dólares estadounidenses (USD).
+            Para convertirlo a pesos mexicanos (MXN), se multiplica el precio en USD por la tasa de cambio
+            USD/MXN del momento. Esta página obtiene el precio de Bitcoin en tiempo real desde CoinGecko
+            y la tasa de cambio desde Frankfurter API, actualizando el resultado cada 60 segundos.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CTA FINAL -->
+    <section style="text-align:center; padding: 2rem 0 4rem;">
+      <div style="background:linear-gradient(135deg,rgba(247,147,26,0.12),rgba(124,92,252,0.08));border:1px solid rgba(247,147,26,0.2);border-radius:var(--r2);padding:3rem 2rem;">
+        <div style="font-family:var(--font-head);font-size:1.6rem;font-weight:800;margin-bottom:.75rem;">¿Listo para comprar tu primer Bitcoin en México?</div>
+        <p style="color:var(--text2);margin-bottom:1.75rem;">Empieza con Bitso — el exchange mexicano más utilizado, regulado y fácil de usar.</p>
+        <a href="https://bitso.com/r?ref=criptum21" target="_blank" rel="noopener sponsored" style="background:var(--btc);color:#fff;padding:14px 32px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:opacity .2s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+          <i class="fab fa-bitcoin"></i> Abrir cuenta en Bitso
+        </a>
+        <div style="margin-top:1rem;font-size:12px;color:var(--text3);">También puedes explorar <a href="index.html" style="color:var(--accent);text-decoration:none;">todas las herramientas de Criptum21</a></div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <a href="index.html" class="footer-logo">⚡ Criptum21</a>
+      <div class="footer-links">
+        <a href="index.html#mercado">Mercado</a>
+        <a href="index.html#calculadoras">Calculadoras</a>
+        <a href="index.html#exchanges">Exchanges</a>
+        <a href="index.html#blog">Blog</a>
+      </div>
+    </div>
+    <div class="disclaimer">
+      ⚠️ Los precios mostrados son referenciales obtenidos de CoinGecko API. Esta página contiene
+      enlaces de afiliados a exchanges. Las criptomonedas son activos de alto riesgo — nunca inviertas
+      más de lo que puedes perder. Esto no es asesoramiento financiero.
+    </div>
+  </div>
+</footer>
+
+<button class="back-to-top" id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Volver arriba">
+  <i class="fas fa-arrow-up"></i>
+</button>
+
+<script>
+  let btcPriceUSD = 0;
+  let mxnRate = 17.5;
+  let priceChart = null;
+
+  // ── FORMATTERS ────────────────────────────────────────────────
+  const fmtMXN = n => '$' + Math.round(n).toLocaleString('es-MX');
+  const fmtUSD = n => n >= 1 ? '$' + n.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}) : '$' + n.toFixed(4);
+  const fmtPct = n => (n >= 0 ? '+' : '') + n.toFixed(2) + '%';
+
+  // ── FETCH PRECIO BTC ─────────────────────────────────────────
+  async function fetchBTCPrice() {
+    try {
+      const res = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin&sparkline=false&price_change_percentage=24h,7d');
+      if (!res.ok) throw new Error();
+      const [btc] = await res.json();
+      btcPriceUSD = btc.current_price;
+      updatePriceDisplay(btc);
+      updateConverter();
+    } catch(e) {
+      btcPriceUSD = 80979;
+      updateConverter();
+    }
+  }
+
+  // ── FETCH TASA MXN ────────────────────────────────────────────
+  async function fetchMXNRate() {
+    try {
+      const res = await fetch('https://api.frankfurter.app/latest?from=USD&to=MXN');
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      mxnRate = data.rates.MXN;
+      updateConverter();
+    } catch(e) { mxnRate = 17.5; }
+  }
+
+  // ── UPDATE PRICE DISPLAY ─────────────────────────────────────
+  function updatePriceDisplay(btc) {
+    const priceMXN = btc.current_price * mxnRate;
+    const pct24 = btc.price_change_percentage_24h || 0;
+
+    document.getElementById('price-mxn').textContent = fmtMXN(priceMXN);
+    document.getElementById('price-usd').textContent = fmtUSD(btc.current_price) + ' USD';
+
+    const pillEl = document.getElementById('price-change');
+    pillEl.textContent = fmtPct(pct24) + ' (24h)';
+    pillEl.className = 'pill ' + (pct24 >= 0 ? 'up' : 'down');
+
+    document.getElementById('stats-mini').innerHTML = `
+      <div class="stat-mini-row"><span>Máximo 24h</span><span>${fmtMXN(btc.high_24h * mxnRate)}</span></div>
+      <div class="stat-mini-row"><span>Mínimo 24h</span><span>${fmtMXN(btc.low_24h * mxnRate)}</span></div>
+      <div class="stat-mini-row"><span>Cap. de mercado</span><span>$${(btc.market_cap/1e9).toFixed(1)}B USD</span></div>
+      <div class="stat-mini-row"><span>Volumen 24h</span><span>$${(btc.total_volume/1e9).toFixed(1)}B USD</span></div>
+    `;
+
+    // Update FAQ precio actual
+    const faqEl = document.getElementById('faq-precio-actual');
+    if (faqEl) faqEl.innerHTML = `Hoy, <strong>1 Bitcoin equivale a ${fmtMXN(priceMXN)} pesos mexicanos</strong> (${fmtUSD(btc.current_price)} USD).
+      El valor en MXN se calcula multiplicando el precio en dólares por la tasa de cambio USD/MXN actual (${mxnRate.toFixed(2)} MXN por dólar).
+      El precio de Bitcoin varía constantemente — esta página se actualiza cada 60 segundos.`;
+
+    document.title = `1 BTC = ${fmtMXN(priceMXN)} MXN hoy | Precio Bitcoin México — Criptum21`;
+  }
+
+  // ── CONVERTER ────────────────────────────────────────────────
+  function updateConverter() {
+    const btcPrice = btcPriceUSD * mxnRate;
+    const btcInput = document.getElementById('input-btc');
+    if (btcInput && document.activeElement !== btcInput) {
+      const btcVal = parseFloat(btcInput.value) || 1;
+      document.getElementById('input-mxn').value = Math.round(btcVal * btcPrice).toLocaleString('es-MX');
+    }
+    document.getElementById('conv-rate').textContent =
+      `1 BTC = ${fmtMXN(btcPrice)} · Tasa USD/MXN: ${mxnRate.toFixed(2)}`;
+  }
+
+  function convertFromBTC() {
+    const btcPrice = btcPriceUSD * mxnRate;
+    const val = parseFloat(document.getElementById('input-btc').value) || 0;
+    document.getElementById('input-mxn').value = val ? Math.round(val * btcPrice).toLocaleString('es-MX') : '';
+  }
+
+  function convertFromMXN() {
+    const btcPrice = btcPriceUSD * mxnRate;
+    const raw = document.getElementById('input-mxn').value.replace(/\./g,'').replace(',','.');
+    const val = parseFloat(raw) || 0;
+    document.getElementById('input-btc').value = val && btcPrice ? (val / btcPrice).toFixed(8) : '';
+  }
+
+  // ── CHART ────────────────────────────────────────────────────
+  async function loadChart(days, btn) {
+    document.querySelectorAll('.tf-tab').forEach(t => t.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    if (priceChart) { priceChart.destroy(); priceChart = null; }
+
+    let prices = [], labels = [];
+    try {
+      const res = await fetch(`https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=${days}`);
+      if (res.ok) {
+        const data = await res.json();
+        prices = data.prices.map(p => p[1] * mxnRate);
+        labels = data.prices.map(p => {
+          const d = new Date(p[0]);
+          return days === '1'
+            ? d.toLocaleTimeString('es', {hour:'2-digit', minute:'2-digit'})
+            : d.toLocaleDateString('es', {day:'numeric', month:'short'});
+        });
+      }
+    } catch(e) {}
+
+    const isUp = prices.length > 1 ? prices[prices.length-1] >= prices[0] : true;
+    const color = isUp ? '#00d084' : '#ff4d6a';
+    const ctx = document.getElementById('btc-chart').getContext('2d');
+    priceChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          data: prices, borderColor: color, borderWidth: 2,
+          fill: true,
+          backgroundColor: ctx2 => {
+            const g = ctx2.chart.ctx.createLinearGradient(0, 0, 0, 280);
+            g.addColorStop(0, color + '40'); g.addColorStop(1, color + '00');
+            return g;
+          },
+          tension: 0.4, pointRadius: 0, pointHoverRadius: 4,
+          pointHoverBackgroundColor: color,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode:'index', intersect:false },
+        plugins: {
+          legend: { display:false },
+          tooltip: {
+            backgroundColor:'#22222f', borderColor:'rgba(255,255,255,0.1)', borderWidth:1,
+            titleColor:'#9898b0', bodyColor:'#f0f0f5',
+            callbacks: { label: c => ' ' + fmtMXN(c.parsed.y) + ' MXN' }
+          }
+        },
+        scales: {
+          x: { display:true, ticks:{ color:'#5c5c78', font:{size:11}, maxTicksLimit:8 }, grid:{ color:'rgba(255,255,255,0.04)' } },
+          y: { display:true, position:'right', ticks:{ color:'#5c5c78', font:{size:11}, callback: v => '$' + (v/1e6).toFixed(1) + 'M' }, grid:{ color:'rgba(255,255,255,0.04)' } }
+        }
+      }
+    });
+  }
+
+  // ── FAQ ──────────────────────────────────────────────────────
+  function toggleFAQ(el) {
+    const item = el.parentElement;
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!wasOpen) item.classList.add('open');
+  }
+
+  // ── BACK TO TOP ───────────────────────────────────────────────
+  window.addEventListener('scroll', () => {
+    document.getElementById('back-to-top').classList.toggle('visible', window.scrollY > 300);
+  }, { passive: true });
+
+  // ── SCHEMA.ORG ───────────────────────────────────────────────
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type":"Question", "name":"¿Cuánto vale 1 Bitcoin en pesos mexicanos hoy?", "acceptedAnswer":{ "@type":"Answer", "text":"El precio se actualiza en tiempo real en esta página. 1 Bitcoin equivale al precio en USD multiplicado por la tasa de cambio USD/MXN del momento." } },
+      { "@type":"Question", "name":"¿Es legal comprar Bitcoin en México?", "acceptedAnswer":{ "@type":"Answer", "text":"Sí, comprar y vender Bitcoin es legal en México bajo la Ley Fintech de 2018. Las ganancias deben declararse al SAT como ingresos gravables." } },
+      { "@type":"Question", "name":"¿Cómo comprar Bitcoin con pesos mexicanos?", "acceptedAnswer":{ "@type":"Answer", "text":"Abre una cuenta en Bitso, verifica tu identidad con tu INE, deposita MXN vía SPEI y compra Bitcoin directamente en la plataforma." } },
+      { "@type":"Question", "name":"¿Puedo comprar menos de 1 Bitcoin en México?", "acceptedAnswer":{ "@type":"Answer", "text":"Sí. Bitcoin es divisible hasta 8 decimales (satoshis). En Bitso puedes comenzar con desde $100 MXN." } }
+    ]
+  };
+  const schemaEl = document.createElement('script');
+  schemaEl.type = 'application/ld+json';
+  schemaEl.textContent = JSON.stringify(schema);
+  document.head.appendChild(schemaEl);
+
+  // ── INIT ─────────────────────────────────────────────────────
+  fetchMXNRate().then(() => {
+    fetchBTCPrice();
+    loadChart('7', null);
+  });
+  setInterval(fetchBTCPrice, 60000);
+  setInterval(fetchMXNRate, 3600000);
+</script>
+</body>
+</html>
