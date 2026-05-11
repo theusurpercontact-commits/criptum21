@@ -922,6 +922,33 @@
     .reveal { opacity: 0; transform: translateY(28px); transition: opacity .55s ease, transform .55s ease; }
     .reveal.revealed { opacity: 1; transform: translateY(0); }
 
+    /* FEAR & GREED */
+    .fng-wrap {
+      background: var(--surface); border: 1px solid var(--border2);
+      border-radius: var(--r2); padding: 1.75rem 2rem;
+      display: flex; align-items: center; gap: 2.5rem;
+    }
+    .fng-left { flex-shrink: 0; }
+    .fng-label { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
+    .fng-gauge-wrap { position: relative; width: 200px; }
+    .fng-gauge { width: 100%; }
+    .fng-number-wrap { text-align: center; margin-top: .25rem; }
+    .fng-number { font-family: var(--font-head); font-size: 2.5rem; font-weight: 700; line-height: 1; }
+    .fng-class { font-size: 13px; color: var(--text2); margin-top: .25rem; font-weight: 500; }
+    .fng-right { flex: 1; display: flex; flex-direction: column; gap: 1rem; }
+    .fng-legend { display: flex; flex-direction: column; gap: .4rem; }
+    .fng-legend-row { display: flex; align-items: center; gap: .5rem; font-size: 13px; color: var(--text2); }
+    .fng-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .fng-yesterday { display: flex; align-items: center; gap: .75rem; padding-top: .75rem; border-top: 1px solid var(--border); }
+    .fng-yday-label { font-size: 12px; color: var(--text3); }
+    .fng-yday-val { font-family: var(--font-head); font-size: 14px; font-weight: 600; color: var(--text2); }
+    .fng-source { font-size: 11px; color: var(--text3); }
+    @media (max-width: 640px) {
+      .fng-wrap { flex-direction: column; gap: 1.25rem; padding: 1.25rem; }
+      .fng-gauge-wrap { width: 160px; margin: 0 auto; }
+      .fng-right { width: 100%; }
+    }
+
     /* CHART TOOLTIP */
     .chart-tooltip {
       background: var(--surface2) !important;
@@ -1028,6 +1055,53 @@
         <div class="stat-label">Monedas activas</div>
         <div class="stat-value" id="stat-coins">—</div>
         <div class="stat-sub">En seguimiento</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEAR & GREED -->
+  <div class="container" style="padding-top:2rem;padding-bottom:0;">
+    <div class="fng-wrap" id="fng-wrap">
+      <div class="fng-left">
+        <div class="fng-label">Índice de Miedo y Codicia</div>
+        <div class="fng-gauge-wrap">
+          <svg class="fng-gauge" viewBox="0 0 200 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="fng-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%"   stop-color="#ef4444"/>
+                <stop offset="25%"  stop-color="#f97316"/>
+                <stop offset="50%"  stop-color="#eab308"/>
+                <stop offset="75%"  stop-color="#84cc16"/>
+                <stop offset="100%" stop-color="#22c55e"/>
+              </linearGradient>
+            </defs>
+            <!-- Track -->
+            <path d="M 10 100 A 90 90 0 0 1 190 100" stroke="rgba(255,255,255,0.08)" stroke-width="16" stroke-linecap="round"/>
+            <!-- Colored arc -->
+            <path id="fng-arc" d="M 10 100 A 90 90 0 0 1 190 100" stroke="url(#fng-grad)" stroke-width="16" stroke-linecap="round" stroke-dasharray="283" stroke-dashoffset="283"/>
+            <!-- Needle -->
+            <line id="fng-needle" x1="100" y1="100" x2="100" y2="18" stroke="white" stroke-width="2.5" stroke-linecap="round" transform="rotate(0, 100, 100)"/>
+            <circle cx="100" cy="100" r="5" fill="white"/>
+          </svg>
+          <div class="fng-number-wrap">
+            <div class="fng-number" id="fng-number">—</div>
+            <div class="fng-class" id="fng-class">Cargando...</div>
+          </div>
+        </div>
+      </div>
+      <div class="fng-right">
+        <div class="fng-legend">
+          <div class="fng-legend-row"><span class="fng-dot" style="background:#ef4444"></span><span>0–24 Miedo extremo</span></div>
+          <div class="fng-legend-row"><span class="fng-dot" style="background:#f97316"></span><span>25–49 Miedo</span></div>
+          <div class="fng-legend-row"><span class="fng-dot" style="background:#eab308"></span><span>50 Neutral</span></div>
+          <div class="fng-legend-row"><span class="fng-dot" style="background:#84cc16"></span><span>51–74 Codicia</span></div>
+          <div class="fng-legend-row"><span class="fng-dot" style="background:#22c55e"></span><span>75–100 Codicia extrema</span></div>
+        </div>
+        <div class="fng-yesterday">
+          <span class="fng-yday-label">Ayer</span>
+          <span class="fng-yday-val" id="fng-yesterday">—</span>
+        </div>
+        <div class="fng-source">Fuente: alternative.me · Actualización diaria</div>
       </div>
     </div>
   </div>
@@ -2281,6 +2355,54 @@ function injectSEO() {
 injectSEO();
 renderCompare();
 
+// ===================== FEAR & GREED =====================
+async function fetchFearGreed() {
+  try {
+    const res = await fetch('https://api.alternative.me/fng/?limit=2');
+    const json = await res.json();
+    const today = json.data[0];
+    const yesterday = json.data[1];
+    const val = parseInt(today.value);
+    const valY = parseInt(yesterday.value);
+
+    const classMap = {
+      'Extreme Fear': 'Miedo Extremo',
+      'Fear': 'Miedo',
+      'Neutral': 'Neutral',
+      'Greed': 'Codicia',
+      'Extreme Greed': 'Codicia Extrema'
+    };
+    const colorMap = {
+      'Extreme Fear': '#ef4444',
+      'Fear': '#f97316',
+      'Neutral': '#eab308',
+      'Greed': '#84cc16',
+      'Extreme Greed': '#22c55e'
+    };
+    const classification = today.value_classification;
+    const color = colorMap[classification] || '#eab308';
+    const label = classMap[classification] || classification;
+
+    document.getElementById('fng-number').textContent = val;
+    document.getElementById('fng-number').style.color = color;
+    document.getElementById('fng-class').textContent = label;
+
+    const diff = val - valY;
+    const sign = diff >= 0 ? '+' : '';
+    document.getElementById('fng-yesterday').textContent = valY + ' (' + sign + diff + ')';
+
+    // Arc: 283 is full semicircle path length. 0 = full red, 283 = full green
+    const dashOffset = 283 - (val / 100) * 283;
+    document.getElementById('fng-arc').setAttribute('stroke-dashoffset', dashOffset);
+
+    // Needle: -90deg = 0 (left), 0deg = 50 (top), +90deg = 100 (right)
+    const angle = (val / 100) * 180 - 90;
+    document.getElementById('fng-needle').setAttribute('transform', 'rotate(' + angle + ', 100, 100)');
+  } catch (e) {
+    document.getElementById('fng-class').textContent = 'No disponible';
+  }
+}
+
 // ===================== NEWSLETTER =====================
 function handleNewsletterSubmit(e) {
   e.preventDefault();
@@ -3181,6 +3303,7 @@ async function fetchCoinTelegraphNews() {
 fetchMarketData();
 fetchGlobalData();
 fetchFXRates();
+fetchFearGreed();
 calcCompuesto();
 calcPL();
 calcDCA();
