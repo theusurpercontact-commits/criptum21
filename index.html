@@ -949,6 +949,39 @@
       .fng-right { width: 100%; }
     }
 
+    /* CONVERSOR RÁPIDO */
+    .conv-quick-wrap {
+      background: var(--surface); border: 1px solid var(--border2);
+      border-radius: var(--r2); padding: 1.75rem 2rem;
+    }
+    .conv-quick-row { display: flex; gap: 1.5rem; align-items: flex-start; flex-wrap: wrap; }
+    .conv-quick-input-group { display: flex; flex-direction: column; gap: .75rem; min-width: 200px; }
+    .cq-input {
+      background: var(--bg); border: 1px solid var(--border2); border-radius: var(--r);
+      color: var(--text); font-family: var(--font-head); font-size: 1.6rem; font-weight: 700;
+      padding: .6rem 1rem; width: 100%; outline: none; transition: border-color .2s;
+    }
+    .cq-input:focus { border-color: var(--accent); }
+    .cq-select {
+      background: var(--bg); border: 1px solid var(--border2); border-radius: var(--r);
+      color: var(--text); font-family: var(--font-body); font-size: 14px;
+      padding: .55rem 1rem; width: 100%; outline: none; cursor: pointer;
+    }
+    .conv-quick-results { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; min-width: 280px; }
+    .cq-result-item {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--r); padding: .75rem 1rem;
+      display: flex; flex-direction: column; gap: .2rem;
+    }
+    .cq-flag { font-size: 1.1rem; }
+    .cq-currency { font-size: 11px; font-weight: 600; letter-spacing: .08em; color: var(--text3); text-transform: uppercase; }
+    .cq-value { font-family: var(--font-head); font-size: 1rem; font-weight: 600; color: var(--text); word-break: break-all; }
+    .cq-updated { font-size: 11px; color: var(--text3); margin-top: 1rem; }
+    @media (max-width: 640px) {
+      .conv-quick-results { grid-template-columns: repeat(2, 1fr); }
+      .conv-quick-wrap { padding: 1.25rem; }
+    }
+
     /* CHART TOOLTIP */
     .chart-tooltip {
       background: var(--surface2) !important;
@@ -1103,6 +1136,37 @@
         </div>
         <div class="fng-source">Fuente: alternative.me · Actualización diaria</div>
       </div>
+    </div>
+  </div>
+
+  <!-- CONVERSOR RÁPIDO -->
+  <div class="container" style="padding-top:1.5rem;padding-bottom:0;">
+    <div class="conv-quick-wrap">
+      <div class="fng-label" style="margin-bottom:1rem;">Conversor rápido</div>
+      <div class="conv-quick-row">
+        <div class="conv-quick-input-group">
+          <input type="number" id="cq-amount" class="cq-input" value="1" min="0" step="any" oninput="calcQuickConv()" />
+          <select id="cq-coin" class="cq-select" onchange="calcQuickConv()">
+            <option value="bitcoin">Bitcoin (BTC)</option>
+            <option value="ethereum">Ethereum (ETH)</option>
+            <option value="tether">Tether (USDT)</option>
+            <option value="binancecoin">BNB</option>
+            <option value="solana">Solana (SOL)</option>
+            <option value="ripple">XRP</option>
+            <option value="usd-coin">USD Coin (USDC)</option>
+            <option value="cardano">Cardano (ADA)</option>
+          </select>
+        </div>
+        <div class="conv-quick-results" id="cq-results">
+          <div class="cq-result-item"><span class="cq-flag">🇺🇸</span><span class="cq-currency">USD</span><span class="cq-value" id="cq-usd">—</span></div>
+          <div class="cq-result-item"><span class="cq-flag">🇨🇱</span><span class="cq-currency">CLP</span><span class="cq-value" id="cq-clp">—</span></div>
+          <div class="cq-result-item"><span class="cq-flag">🇲🇽</span><span class="cq-currency">MXN</span><span class="cq-value" id="cq-mxn">—</span></div>
+          <div class="cq-result-item"><span class="cq-flag">🇨🇴</span><span class="cq-currency">COP</span><span class="cq-value" id="cq-cop">—</span></div>
+          <div class="cq-result-item"><span class="cq-flag">🇦🇷</span><span class="cq-currency">ARS</span><span class="cq-value" id="cq-ars">—</span></div>
+          <div class="cq-result-item"><span class="cq-flag">🇧🇷</span><span class="cq-currency">BRL</span><span class="cq-value" id="cq-brl">—</span></div>
+        </div>
+      </div>
+      <div class="cq-updated">Precios de CoinGecko · <span id="cq-coin-price">—</span></div>
     </div>
   </div>
 
@@ -1808,6 +1872,7 @@ async function fetchMarketData() {
     updateHeroCard();
     updateStats();
     calcConversion();
+    calcQuickConv();
   } catch(e) {
     console.warn('CoinGecko error, using demo data', e);
     loadDemoData();
@@ -1852,6 +1917,7 @@ function loadDemoData() {
   document.getElementById('stat-dom').textContent = '60.8%';
   document.getElementById('stat-coins').textContent = '16,284';
   calcConversion();
+  calcQuickConv();
 }
 
 // ===================== HERO CARD =====================
@@ -2354,6 +2420,27 @@ function injectSEO() {
 }
 injectSEO();
 renderCompare();
+
+// ===================== CONVERSOR RÁPIDO =====================
+function calcQuickConv() {
+  const amount = parseFloat(document.getElementById('cq-amount').value) || 0;
+  const coinId = document.getElementById('cq-coin').value;
+  const coin = allCoins.find(c => c.id === coinId);
+  if (!coin) return;
+
+  const usdVal = amount * coin.current_price;
+  const fmt = (n, decimals) => n.toLocaleString('es-CL', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+
+  document.getElementById('cq-usd').textContent = '$' + fmt(usdVal, 2);
+  document.getElementById('cq-clp').textContent = '$' + fmt(usdVal * (fxRates.clp || 940), 0);
+  document.getElementById('cq-mxn').textContent = '$' + fmt(usdVal * (fxRates.mxn || 17), 2);
+  document.getElementById('cq-cop').textContent = '$' + fmt(usdVal * (fxRates.cop || 4300), 0);
+  document.getElementById('cq-ars').textContent = '$' + fmt(usdVal * (fxRates.ars || 1050), 0);
+  document.getElementById('cq-brl').textContent = 'R$' + fmt(usdVal * (fxRates.brl || 5.75), 2);
+
+  const priceFmt = '$' + coin.current_price.toLocaleString('es-CL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  document.getElementById('cq-coin-price').textContent = '1 ' + coin.symbol.toUpperCase() + ' = ' + priceFmt + ' USD';
+}
 
 // ===================== FEAR & GREED =====================
 async function fetchFearGreed() {
