@@ -56,13 +56,15 @@
       backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
       display: flex; align-items: center; justify-content: space-between;
-      padding: 0 2rem; height: 92px;
+      padding: 0 2rem; height: 64px;
     }
     .nav-logo {
-      display: flex; align-items: center;
-      text-decoration: none; flex-shrink: 0;
+      font-family: var(--font-head);
+      font-size: 1.35rem; font-weight: 700;
+      color: #fff; text-decoration: none;
+      letter-spacing: -0.01em; flex-shrink: 0;
     }
-    .nav-logo img { height: 80px; width: auto; object-fit: contain; display: block; }
+    .nav-logo span { color: var(--accent); }
     .nav-links { display: flex; gap: 2rem; list-style: none; }
     .nav-links a {
       color: var(--text2); text-decoration: none;
@@ -82,7 +84,7 @@
 
     /* TICKER TAPE */
     .ticker-wrap {
-      position: fixed; top: 92px; left: 0; right: 0; z-index: 99;
+      position: fixed; top: 64px; left: 0; right: 0; z-index: 99;
       background: var(--bg2);
       border-bottom: 1px solid var(--border);
       overflow: hidden; height: 36px;
@@ -107,7 +109,7 @@
     .down { color: var(--red); }
 
     /* LAYOUT */
-    .wrapper { padding-top: 128px; }
+    .wrapper { padding-top: 100px; }
     .container { max-width: 1240px; margin: 0 auto; padding: 0 1.5rem; }
 
     /* SECTION */
@@ -431,6 +433,39 @@
       padding: .75rem 1rem; margin-bottom: 1.5rem;
     }
 
+    /* SPLASH */
+    .splash-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      background: #0a0a0f;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 2.5rem;
+      transition: opacity .7s ease;
+    }
+    .splash-overlay.hiding { opacity: 0; pointer-events: none; }
+    .splash-logo {
+      width: min(420px, 80vw);
+      animation: splashIn .9s cubic-bezier(.16,1,.3,1) forwards;
+      opacity: 0;
+    }
+    @keyframes splashIn {
+      from { opacity: 0; transform: scale(.9) translateY(12px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .splash-btn {
+      background: var(--accent); color: #fff;
+      padding: 14px 40px; border-radius: 12px;
+      font-family: var(--font-head); font-size: 1rem; font-weight: 600;
+      border: none; cursor: pointer; letter-spacing: .02em;
+      opacity: 0; animation: splashIn .6s .5s cubic-bezier(.16,1,.3,1) forwards;
+      transition: transform .15s, box-shadow .15s;
+    }
+    .splash-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(124,92,252,.4); }
+    .splash-tagline {
+      font-size: 13px; letter-spacing: .15em; color: var(--text3);
+      text-transform: uppercase;
+      opacity: 0; animation: splashIn .6s .3s cubic-bezier(.16,1,.3,1) forwards;
+    }
+
     /* REVEAL ANIMATIONS */
     .reveal {
       opacity: 0; transform: translateY(20px);
@@ -468,7 +503,7 @@
       transition: all .25s;
     }
     .nav-mobile {
-      display: none; position: fixed; top: 92px; left: 0; right: 0; z-index: 98;
+      display: none; position: fixed; top: 64px; left: 0; right: 0; z-index: 98;
       background: rgba(10,10,15,0.97); backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
       flex-direction: column; padding: 1rem 1.5rem 1.5rem;
@@ -880,9 +915,16 @@
 </head>
 <body>
 
+<!-- SPLASH -->
+<div class="splash-overlay" id="splash-overlay">
+  <img src="logo-criptum21.png" alt="Criptum21" class="splash-logo" />
+  <p class="splash-tagline">Criptos · Finanzas · Futuro</p>
+  <button class="splash-btn" onclick="hideSplash()">Entrar al sitio →</button>
+</div>
+
 <!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo"><img src="logo-criptum21.png" alt="Criptum21" /></a>
+  <a href="#" class="nav-logo">CRIPTUM<span>21</span></a>
   <ul class="nav-links">
     <li><a href="#mercado" class="active">Mercado</a></li>
     <li><a href="#portafolio">Portafolio</a></li>
@@ -1583,7 +1625,7 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <a href="#" class="nav-logo"><img src="logo-criptum21.png" alt="Criptum21" style="height:56px;" /></a>
+        <a href="#" class="nav-logo" style="font-size:1.5rem;">CRIPTUM<span>21</span></a>
         <p>Tu referencia de finanzas e inversiones cripto para Latinoamérica. Datos en tiempo real, sin registro, sin costos.</p>
       </div>
       <div class="footer-col">
@@ -3111,6 +3153,19 @@ calcDCA();
 setInterval(fetchMarketData, 60000);
 setInterval(fetchGlobalData, 120000);
 setInterval(fetchFXRates, 3600000);
+
+// Splash screen
+function hideSplash() {
+  const el = document.getElementById('splash-overlay');
+  if (!el) return;
+  el.classList.add('hiding');
+  setTimeout(() => el.remove(), 750);
+  sessionStorage.setItem('splash-seen', '1');
+}
+if (sessionStorage.getItem('splash-seen')) {
+  const el = document.getElementById('splash-overlay');
+  if (el) el.remove();
+}
 
 // Scroll reveal — only for below-fold cards, never for critical data
 const _revealObs = new IntersectionObserver(entries => {
