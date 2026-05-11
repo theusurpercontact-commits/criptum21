@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://criptum21.netlify.app/sitemap.xml

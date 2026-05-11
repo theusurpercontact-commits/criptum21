@@ -1,0 +1,3075 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Criptum21 — Finanzas e inversiones para Latinoamérica</title>
+  <meta name="description" content="Precios de criptomonedas en tiempo real, calculadoras financieras y guías de inversión para Chile, México, Colombia y toda Latinoamérica." />
+  <meta property="og:title" content="Criptum21 — Finanzas e inversiones para Latinoamérica" />
+  <meta property="og:description" content="Precios en vivo, calculadoras de inversión y guías de cripto en español." />
+  <meta property="og:type" content="website" />
+  <meta name="robots" content="index, follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --bg2: #111118;
+      --bg3: #16161f;
+      --surface: #1c1c28;
+      --surface2: #22222f;
+      --border: rgba(255,255,255,0.06);
+      --border2: rgba(255,255,255,0.10);
+      --text: #f0f0f5;
+      --text2: #9898b0;
+      --text3: #5c5c78;
+      --accent: #7c5cfc;
+      --accent2: #5b3fcc;
+      --green: #00d084;
+      --green-dim: rgba(0,208,132,0.12);
+      --red: #ff4d6a;
+      --red-dim: rgba(255,77,106,0.12);
+      --amber: #ffb830;
+      --amber-dim: rgba(255,184,48,0.12);
+      --font-head: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --r: 12px;
+      --r2: 20px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; height: 64px;
+    }
+    .nav-logo {
+      font-family: var(--font-head);
+      font-size: 1.3rem; font-weight: 800;
+      background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: var(--text2); text-decoration: none;
+      font-size: 14px; font-weight: 400;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--text); font-weight: 500; }
+    .nav-cta {
+      background: var(--accent); color: #fff;
+      padding: 8px 20px; border-radius: 8px;
+      font-size: 14px; font-weight: 500;
+      text-decoration: none;
+      transition: opacity .2s;
+    }
+    .nav-cta:hover { opacity: .85; }
+
+    /* TICKER TAPE */
+    .ticker-wrap {
+      position: fixed; top: 64px; left: 0; right: 0; z-index: 99;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden; height: 36px;
+    }
+    .ticker-track {
+      display: flex; gap: 0;
+      animation: ticker 40s linear infinite;
+      white-space: nowrap;
+    }
+    .ticker-track:hover { animation-play-state: paused; }
+    @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .ticker-item {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 0 24px; height: 36px;
+      font-size: 13px; font-family: var(--font-body);
+      border-right: 1px solid var(--border);
+    }
+    .ticker-symbol { font-weight: 500; color: var(--text); }
+    .ticker-price { color: var(--text2); }
+    .ticker-change { font-size: 12px; font-weight: 500; }
+    .up { color: var(--green); }
+    .down { color: var(--red); }
+
+    /* LAYOUT */
+    .wrapper { padding-top: 100px; }
+    .container { max-width: 1240px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* SECTION */
+    section { padding: 3rem 0; }
+    .section-label {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: .5rem;
+    }
+    .section-title {
+      font-family: var(--font-head);
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 700; line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+    .section-sub { color: var(--text2); max-width: 560px; margin-bottom: 2.5rem; }
+
+    /* HERO */
+    .hero {
+      padding: 5rem 0 3rem;
+      background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(124,92,252,0.18) 0%, transparent 70%);
+    }
+    .hero-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(124,92,252,0.15); border: 1px solid rgba(124,92,252,0.3);
+      color: #b89fff; padding: 5px 14px; border-radius: 100px;
+      font-size: 13px; margin-bottom: 1.5rem;
+    }
+    .hero-tag-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
+    .hero-title {
+      font-family: var(--font-head);
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      font-weight: 800; line-height: 1.08;
+      margin-bottom: 1.2rem;
+    }
+    .hero-title em { font-style: normal; color: var(--accent); }
+    .hero-sub { color: var(--text2); font-size: 1.05rem; margin-bottom: 2rem; max-width: 480px; }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--accent); color: #fff;
+      padding: 13px 28px; border-radius: 10px;
+      font-size: 15px; font-weight: 500;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: transform .15s, box-shadow .15s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 32px rgba(124,92,252,0.35); }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border2); color: var(--text);
+      padding: 13px 28px; border-radius: 10px;
+      font-size: 15px; font-weight: 400;
+      text-decoration: none; cursor: pointer;
+      transition: border-color .2s, background .2s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-outline:hover { border-color: var(--accent); background: rgba(124,92,252,0.08); }
+
+    /* HERO CARD */
+    .hero-card {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--r2);
+      overflow: hidden;
+      max-height: 340px;
+    }
+    .hero-card-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .live-badge {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 12px; color: var(--green);
+    }
+    .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 1.5s infinite; }
+    .hero-chart-area { padding: 1rem 1rem 0.5rem; }
+    .hero-chart-wrap { position: relative; height: 150px; width: 100%; }
+
+    /* STATS BAR */
+    .stats-bar {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border); border-radius: var(--r);
+      overflow: hidden; margin-bottom: 3rem;
+    }
+    .stat-cell {
+      background: var(--bg2); padding: 1.2rem 1.5rem;
+    }
+    .stat-label { font-size: 12px; color: var(--text3); margin-bottom: 4px; }
+    .stat-value { font-family: var(--font-head); font-size: 1.4rem; font-weight: 700; }
+    .stat-sub { font-size: 12px; color: var(--text3); margin-top: 2px; }
+
+    /* CRYPTO TABLE */
+    .crypto-table-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r2); overflow: hidden;
+    }
+    .table-controls {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border);
+      flex-wrap: wrap; gap: 12px;
+    }
+    .search-input {
+      background: var(--bg3); border: 1px solid var(--border2);
+      color: var(--text); padding: 8px 14px 8px 36px;
+      border-radius: 8px; font-size: 14px; width: 220px;
+      outline: none; position: relative;
+    }
+    .search-wrap { position: relative; }
+    .search-wrap i { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 14px; }
+    .search-input:focus { border-color: var(--accent); }
+    .table-tabs { display: flex; gap: 4px; }
+    .tab {
+      padding: 7px 16px; border-radius: 8px;
+      font-size: 13px; cursor: pointer; border: none;
+      background: transparent; color: var(--text2); transition: all .2s;
+    }
+    .tab.active { background: var(--accent); color: #fff; }
+    .tab:hover:not(.active) { background: var(--surface2); color: var(--text); }
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      font-size: 12px; font-weight: 500; color: var(--text3);
+      padding: 10px 16px; text-align: left;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap; cursor: pointer;
+    }
+    th:hover { color: var(--text2); }
+    th.num, td.num { text-align: right; }
+    td {
+      padding: 14px 16px; font-size: 14px;
+      border-bottom: 1px solid var(--border);
+      transition: background .15s;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+    .coin-cell { display: flex; align-items: center; gap: 10px; }
+    .coin-icon {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
+    }
+    .coin-name { font-weight: 500; font-size: 14px; }
+    .coin-symbol { font-size: 12px; color: var(--text3); }
+    .rank { font-size: 13px; color: var(--text3); font-weight: 500; }
+    .sparkline { width: 80px; height: 36px; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 3px;
+      padding: 3px 8px; border-radius: 6px;
+      font-size: 12px; font-weight: 500;
+    }
+    .pill.up { background: var(--green-dim); color: var(--green); }
+    .pill.down { background: var(--red-dim); color: var(--red); }
+    .btn-buy {
+      background: var(--surface2); border: 1px solid var(--border2);
+      color: var(--text2); padding: 5px 12px; border-radius: 6px;
+      font-size: 12px; cursor: pointer; text-decoration: none;
+      transition: all .2s; white-space: nowrap;
+    }
+    .btn-buy:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+    /* CALCULADORAS */
+    .calc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.5rem; }
+    .calc-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r2); padding: 1.75rem; overflow: hidden;
+    }
+    .calc-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: rgba(124,92,252,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; margin-bottom: 1.2rem;
+    }
+    .calc-title { font-family: var(--font-head); font-size: 1.1rem; font-weight: 700; margin-bottom: 4px; }
+    .calc-desc { font-size: 13px; color: var(--text2); margin-bottom: 1.5rem; }
+    .form-group { margin-bottom: 1rem; }
+    .form-label { font-size: 12px; color: var(--text2); margin-bottom: 6px; display: block; }
+    .form-input {
+      width: 100%; background: var(--bg3);
+      border: 1px solid var(--border2); color: var(--text);
+      padding: 10px 14px; border-radius: 8px; font-size: 14px;
+      outline: none; font-family: var(--font-body); transition: border-color .2s;
+    }
+    .form-input:focus { border-color: var(--accent); }
+    .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .calc-result {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1rem 1.25rem; margin-top: 1rem;
+    }
+    .result-label { font-size: 12px; color: var(--text3); margin-bottom: 4px; }
+    .result-value {
+      font-family: var(--font-head); font-size: 1.6rem; font-weight: 700;
+      color: var(--green);
+    }
+    .result-detail { font-size: 12px; color: var(--text3); margin-top: 4px; }
+    .calc-btn {
+      width: 100%; background: var(--accent); color: #fff;
+      border: none; padding: 11px; border-radius: 8px;
+      font-size: 14px; font-weight: 500; cursor: pointer;
+      margin-top: 1rem; transition: opacity .2s; font-family: var(--font-body);
+    }
+    .calc-btn:hover { opacity: .85; }
+
+    /* AFILIADOS */
+    .affiliate-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+    .affiliate-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r2); padding: 1.5rem;
+      display: flex; flex-direction: column; gap: 1rem;
+      transition: border-color .2s, transform .2s;
+    }
+    .affiliate-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+    .affiliate-card.featured { border-color: rgba(124,92,252,0.4); }
+    .affiliate-header { display: flex; align-items: center; gap: 12px; }
+    .exchange-logo {
+      width: 48px; height: 48px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 800; color: #fff;
+      font-family: var(--font-head);
+    }
+    .exchange-name { font-weight: 600; font-size: 15px; }
+    .exchange-country { font-size: 12px; color: var(--text3); }
+    .affiliate-badge {
+      margin-left: auto; font-size: 11px; font-weight: 600;
+      padding: 3px 10px; border-radius: 100px;
+      background: rgba(124,92,252,0.15); color: var(--accent);
+      border: 1px solid rgba(124,92,252,0.25);
+    }
+    .affiliate-features { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .affiliate-features li {
+      font-size: 13px; color: var(--text2);
+      display: flex; align-items: center; gap: 7px;
+    }
+    .affiliate-features li i { color: var(--green); font-size: 12px; }
+    .affiliate-bonus {
+      background: var(--amber-dim); border: 1px solid rgba(255,184,48,0.2);
+      border-radius: 8px; padding: 10px 14px;
+      font-size: 13px; color: var(--amber); font-weight: 500;
+    }
+    .affiliate-btn {
+      width: 100%; background: transparent;
+      border: 1px solid var(--border2); color: var(--text);
+      padding: 10px; border-radius: 8px;
+      font-size: 14px; font-weight: 500; cursor: pointer;
+      text-decoration: none; text-align: center;
+      display: block; transition: all .2s;
+    }
+    .affiliate-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .affiliate-card.featured .affiliate-btn { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+    /* BLOG */
+    .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+    .blog-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r2); overflow: hidden;
+      cursor: pointer; transition: border-color .2s, transform .2s;
+      text-decoration: none; color: inherit; display: block;
+    }
+    .blog-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+    .blog-img {
+      height: 160px; display: flex; align-items: center; justify-content: center;
+      font-size: 3rem;
+    }
+    .blog-body { padding: 1.25rem; }
+    .blog-cat {
+      font-size: 11px; font-weight: 600; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 8px;
+    }
+    .blog-title { font-family: var(--font-head); font-size: 1rem; font-weight: 700; line-height: 1.3; margin-bottom: 8px; }
+    .blog-excerpt { font-size: 13px; color: var(--text2); line-height: 1.5; margin-bottom: 1rem; }
+    .blog-meta { display: flex; align-items: center; gap: 12px; font-size: 12px; color: var(--text3); }
+    .blog-meta i { font-size: 11px; }
+
+    /* NEWSLETTER */
+    .newsletter-section {
+      background: linear-gradient(135deg, rgba(124,92,252,0.15) 0%, rgba(91,63,204,0.08) 100%);
+      border: 1px solid rgba(124,92,252,0.2);
+      border-radius: var(--r2); padding: 3rem; text-align: center; margin: 2rem 0;
+    }
+    .newsletter-title { font-family: var(--font-head); font-size: 1.8rem; font-weight: 800; margin-bottom: .75rem; }
+    .newsletter-sub { color: var(--text2); margin-bottom: 1.75rem; }
+    .newsletter-form { display: flex; gap: 10px; max-width: 480px; margin: 0 auto; }
+    .newsletter-input {
+      flex: 1; background: var(--bg2); border: 1px solid var(--border2);
+      color: var(--text); padding: 12px 16px; border-radius: 10px;
+      font-size: 14px; outline: none; font-family: var(--font-body);
+    }
+    .newsletter-input:focus { border-color: var(--accent); }
+
+    /* FOOTER */
+    footer {
+      background: var(--bg2); border-top: 1px solid var(--border);
+      padding: 3rem 0 1.5rem;
+    }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 2.5rem; }
+    .footer-brand p { font-size: 13px; color: var(--text3); margin-top: .75rem; max-width: 280px; line-height: 1.6; }
+    .footer-col h4 { font-size: 13px; font-weight: 600; margin-bottom: 1rem; color: var(--text); }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .footer-col ul a { font-size: 13px; color: var(--text3); text-decoration: none; transition: color .2s; }
+    .footer-col ul a:hover { color: var(--text); }
+    .footer-bottom {
+      border-top: 1px solid var(--border); padding-top: 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 12px; color: var(--text3); flex-wrap: wrap; gap: 8px;
+    }
+    .disclaimer {
+      font-size: 11px; color: var(--text3); line-height: 1.5;
+      background: var(--bg3); border-radius: 8px;
+      padding: .75rem 1rem; margin-bottom: 1.5rem;
+    }
+
+    /* LOADING */
+    .skeleton {
+      background: linear-gradient(90deg, var(--surface) 25%, var(--surface2) 50%, var(--surface) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 4px;
+    }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 3px; }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .stats-bar { grid-template-columns: repeat(2,1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .nav-hamburger {
+      display: none; flex-direction: column; justify-content: center; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 6px;
+    }
+    .nav-hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--text2); border-radius: 2px;
+      transition: all .25s;
+    }
+    .nav-mobile {
+      display: none; position: fixed; top: 64px; left: 0; right: 0; z-index: 98;
+      background: rgba(10,10,15,0.97); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      flex-direction: column; padding: 1rem 1.5rem 1.5rem;
+    }
+    .nav-mobile.open { display: flex; }
+    .nav-mobile a {
+      color: var(--text2); text-decoration: none; font-size: 15px;
+      padding: .65rem 0; border-bottom: 1px solid var(--border);
+      transition: color .2s;
+    }
+    .nav-mobile a:last-child { border-bottom: none; }
+    .nav-mobile a:hover { color: var(--text); }
+    @media (max-width: 600px) {
+      nav { padding: 0 1rem; }
+      .nav-links { display: none; }
+      .nav-cta { display: none; }
+      .nav-hamburger { display: flex; }
+      .stats-bar { grid-template-columns: repeat(2,1fr); }
+      .footer-grid { grid-template-columns: 1fr; }
+      .newsletter-form { flex-direction: column; }
+    }
+
+
+    /* ===== FASE 2: PORTAFOLIO ===== */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+      align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--surface); border: 1px solid var(--border2);
+      border-radius: var(--r2); padding: 2rem; width: 100%; max-width: 480px;
+      max-height: 90vh; overflow-y: auto;
+    }
+    .modal-title { font-family: var(--font-head); font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; }
+    .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .portfolio-stat {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 1.25rem;
+    }
+    .portfolio-stat-label { font-size: 12px; color: var(--text3); margin-bottom: 6px; }
+    .portfolio-stat-value { font-family: var(--font-head); font-size: 1.5rem; font-weight: 700; }
+    .portfolio-stat-sub { font-size: 12px; margin-top: 4px; }
+    .portfolio-table-wrap {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r2); overflow: hidden; margin-bottom: 1.5rem;
+    }
+    .portfolio-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border);
+    }
+    .portfolio-title { font-family: var(--font-head); font-size: 1rem; font-weight: 700; }
+    .btn-add {
+      background: var(--accent); color: #fff;
+      border: none; padding: 8px 18px; border-radius: 8px;
+      font-size: 13px; font-weight: 500; cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+      font-family: var(--font-body); transition: opacity .2s;
+    }
+    .btn-add:hover { opacity: .85; }
+    .empty-state {
+      padding: 3rem; text-align: center; color: var(--text3);
+    }
+    .empty-state i { font-size: 2.5rem; margin-bottom: 1rem; display: block; opacity: .4; }
+    .empty-state p { font-size: 14px; margin-bottom: 1.25rem; }
+    .alloc-bar-wrap { height: 8px; background: var(--bg3); border-radius: 4px; overflow: hidden; margin-top: 4px; }
+    .alloc-bar { height: 100%; border-radius: 4px; transition: width .4s ease; }
+    .watchlist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
+    .watch-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 1rem; cursor: pointer;
+      transition: border-color .2s, transform .15s;
+      position: relative;
+    }
+    .watch-card:hover { border-color: var(--border2); transform: translateY(-1px); }
+    .watch-card.alert-triggered { border-color: var(--amber); }
+    .watch-remove {
+      position: absolute; top: 8px; right: 8px;
+      background: none; border: none; color: var(--text3);
+      cursor: pointer; font-size: 14px; padding: 2px 6px;
+      transition: color .2s;
+    }
+    .watch-remove:hover { color: var(--red); }
+    .watch-name { font-size: 13px; font-weight: 500; margin-bottom: 2px; }
+    .watch-symbol { font-size: 11px; color: var(--text3); }
+    .watch-price { font-family: var(--font-head); font-size: 1.1rem; font-weight: 700; margin: 8px 0 2px; }
+    .watch-change { font-size: 12px; font-weight: 500; }
+    .watch-alert { font-size: 11px; color: var(--text3); margin-top: 6px; display: flex; align-items: center; gap: 4px; }
+    .watch-alert.fired { color: var(--amber); }
+    .detail-overlay {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
+      align-items: flex-start; justify-content: center; padding-top: 80px;
+    }
+    .detail-overlay.open { display: flex; }
+    .detail-modal {
+      background: var(--bg2); border: 1px solid var(--border2);
+      border-radius: var(--r2); padding: 0; width: 100%; max-width: 860px;
+      max-height: 85vh; overflow-y: auto;
+    }
+    .detail-header {
+      display: flex; align-items: center; gap: 14px;
+      padding: 1.5rem; border-bottom: 1px solid var(--border);
+    }
+    .detail-icon {
+      width: 48px; height: 48px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 700; flex-shrink: 0;
+    }
+    .detail-close {
+      margin-left: auto; background: none; border: none;
+      color: var(--text2); font-size: 22px; cursor: pointer;
+      padding: 4px 8px; transition: color .2s;
+    }
+    .detail-close:hover { color: var(--text); }
+    .detail-body { padding: 1.5rem; }
+    .detail-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 1.5rem; }
+    .detail-stat { background: var(--surface); border-radius: var(--r); padding: 1rem; }
+    .detail-stat-label { font-size: 11px; color: var(--text3); margin-bottom: 4px; }
+    .detail-stat-val { font-family: var(--font-head); font-size: 1rem; font-weight: 700; }
+    .timeframe-tabs { display: flex; gap: 4px; margin-bottom: 1rem; }
+    .tf-tab {
+      padding: 5px 12px; border-radius: 6px; font-size: 12px;
+      cursor: pointer; border: none; background: transparent;
+      color: var(--text2); transition: all .15s; font-family: var(--font-body);
+    }
+    .tf-tab.active { background: var(--accent); color: #fff; }
+    .tf-tab:hover:not(.active) { background: var(--surface2); color: var(--text); }
+    .rebalance-wrap {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r2); padding: 1.5rem; margin-bottom: 2rem;
+    }
+    .rebalance-title { font-family: var(--font-head); font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+    .rebalance-desc { font-size: 13px; color: var(--text2); margin-bottom: 1.25rem; }
+    .rebalance-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .rebalance-label { font-size: 13px; min-width: 100px; }
+    .rebalance-slider { flex: 1; }
+    .rebalance-pct { font-family: var(--font-head); font-size: 13px; font-weight: 700; min-width: 40px; text-align: right; }
+    .rebalance-total {
+      font-size: 12px; padding: 8px 12px; border-radius: 6px;
+      margin-top: .75rem; text-align: center; font-weight: 500;
+    }
+    .rebalance-total.ok { background: var(--green-dim); color: var(--green); }
+    .rebalance-total.err { background: var(--red-dim); color: var(--red); }
+
+
+    /* ===== FASE 3: BLOG + SEO ===== */
+    .blog-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 2rem; }
+    .blog-filter {
+      padding: 7px 18px; border-radius: 100px; font-size: 13px;
+      cursor: pointer; border: 1px solid var(--border2);
+      background: transparent; color: var(--text2); transition: all .2s;
+      font-family: var(--font-body);
+    }
+    .blog-filter.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .blog-filter:hover:not(.active) { border-color: var(--accent); color: var(--text); }
+    .blog-card-featured {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r2); overflow: hidden; cursor: pointer;
+      transition: border-color .2s, transform .2s; display: block;
+      grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr;
+    }
+    .blog-card-featured:hover { border-color: var(--border2); transform: translateY(-2px); }
+    .blog-img-lg {
+      height: 100%; min-height: 200px;
+      display: flex; align-items: center; justify-content: center; font-size: 5rem;
+    }
+    .blog-tag {
+      display: inline-flex; align-items: center;
+      background: rgba(124,92,252,0.15); border: 1px solid rgba(124,92,252,0.25);
+      color: var(--accent); font-size: 11px; font-weight: 600;
+      padding: 3px 10px; border-radius: 100px; margin-right: 6px; margin-bottom: 6px;
+    }
+    .blog-read-more {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: var(--accent); font-size: 13px; font-weight: 500;
+      margin-top: .75rem; text-decoration: none;
+    }
+    .compare-table-wrap {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r2); overflow: auto;
+    }
+    .compare-table { width: 100%; border-collapse: collapse; white-space: nowrap; }
+    .compare-table th {
+      font-size: 11px; color: var(--text3); font-weight: 500;
+      padding: 12px 16px; text-align: left;
+      border-bottom: 1px solid var(--border); background: var(--bg3);
+    }
+    .compare-table td {
+      font-size: 13px; padding: 14px 16px;
+      border-bottom: 1px solid var(--border); vertical-align: middle;
+    }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .compare-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .compare-exchange { display: flex; align-items: center; gap: 10px; }
+    .compare-logo {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 800; color: #fff; flex-shrink: 0;
+      font-family: var(--font-head);
+    }
+    .compare-name { font-weight: 500; font-size: 14px; }
+    .compare-sub { font-size: 11px; color: var(--text3); }
+    .stars { color: var(--amber); font-size: 12px; letter-spacing: 1px; }
+    .check { color: var(--green); } .cross { color: var(--red); }
+    .article-overlay {
+      display: none; position: fixed; inset: 0; z-index: 300;
+      background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+      align-items: flex-start; justify-content: center;
+      padding: 80px 1rem 2rem; overflow-y: auto;
+    }
+    .article-overlay.open { display: flex; }
+    .article-modal {
+      background: var(--bg2); border: 1px solid var(--border2);
+      border-radius: var(--r2); width: 100%; max-width: 740px;
+      overflow: hidden;
+    }
+    .article-modal-header {
+      padding: 2rem 2rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex; gap: 1rem;
+    }
+    .article-modal-cat {
+      font-size: 11px; font-weight: 600; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: .5rem;
+    }
+    .article-modal-title {
+      font-family: var(--font-head); font-size: 1.6rem; font-weight: 800;
+      line-height: 1.15; margin-bottom: .75rem;
+    }
+    .article-modal-meta { font-size: 13px; color: var(--text3); display: flex; gap: 16px; flex-wrap: wrap; }
+    .article-modal-body {
+      padding: 2rem; font-size: 15px; line-height: 1.75; color: var(--text2);
+    }
+    .article-modal-body h2 {
+      font-family: var(--font-head); font-size: 1.2rem; font-weight: 700;
+      color: var(--text); margin: 2rem 0 .75rem;
+    }
+    .article-modal-body h3 {
+      font-family: var(--font-head); font-size: 1rem; font-weight: 600;
+      color: var(--text); margin: 1.5rem 0 .5rem;
+    }
+    .article-modal-body p { margin-bottom: 1rem; }
+    .article-modal-body ul { padding-left: 1.5rem; margin-bottom: 1rem; }
+    .article-modal-body li { margin-bottom: .4rem; }
+    .article-modal-body strong { color: var(--text); font-weight: 600; }
+    .article-modal-body .highlight {
+      background: rgba(124,92,252,0.1); border-left: 3px solid var(--accent);
+      padding: .75rem 1rem; border-radius: 0 8px 8px 0; margin: 1.25rem 0;
+      color: var(--text);
+    }
+    .article-modal-body .warning {
+      background: rgba(255,184,48,0.1); border-left: 3px solid var(--amber);
+      padding: .75rem 1rem; border-radius: 0 8px 8px 0; margin: 1.25rem 0;
+    }
+    .article-modal-footer {
+      padding: 1.5rem 2rem; border-top: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .article-cta {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .article-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+
+    /* ===== FASE 4: AUTOMATIZACIÓN + ESCALA ===== */
+    .refresh-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 90;
+      height: 3px; background: var(--border);
+    }
+    .refresh-progress {
+      height: 100%; background: var(--accent);
+      width: 100%; transition: width linear;
+    }
+    .toast-wrap {
+      position: fixed; bottom: 24px; right: 24px; z-index: 500;
+      display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+    }
+    .toast {
+      background: var(--surface2); border: 1px solid var(--border2);
+      border-radius: 12px; padding: 12px 16px;
+      display: flex; align-items: center; gap: 10px;
+      font-size: 13px; pointer-events: all;
+      animation: slideIn .3s ease; max-width: 320px;
+      box-shadow: 0 8px 32px rgba(0,0,0,.4);
+    }
+    @keyframes slideIn { from { transform: translateX(120%); opacity:0; } to { transform: translateX(0); opacity:1; } }
+    @keyframes slideOut { from { transform: translateX(0); opacity:1; } to { transform: translateX(120%); opacity:0; } }
+    .toast.removing { animation: slideOut .3s ease forwards; }
+    .toast-icon { font-size: 18px; flex-shrink: 0; }
+    .toast-title { font-weight: 500; color: var(--text); }
+    .toast-body { font-size: 12px; color: var(--text2); margin-top: 1px; }
+    .toast-close { margin-left: auto; background: none; border: none; color: var(--text3); cursor: pointer; font-size: 16px; padding: 0 2px; flex-shrink: 0; }
+    .affiliate-float {
+      position: fixed; bottom: 24px; left: 24px; z-index: 89;
+      background: var(--surface); border: 1px solid rgba(124,92,252,0.35);
+      border-radius: 14px; padding: 14px 18px;
+      display: flex; align-items: center; gap: 12px;
+      max-width: 300px; cursor: pointer;
+      transition: transform .2s, border-color .2s;
+      animation: floatIn .4s ease;
+    }
+    @keyframes floatIn { from { transform: translateY(20px); opacity:0; } to { transform: translateY(0); opacity:1; } }
+    .affiliate-float:hover { transform: translateY(-2px); border-color: var(--accent); }
+    .affiliate-float-logo {
+      width: 40px; height: 40px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 800; color: #fff;
+      font-family: var(--font-head); flex-shrink: 0;
+    }
+    .affiliate-float-text { flex: 1; }
+    .affiliate-float-name { font-size: 13px; font-weight: 600; color: var(--text); }
+    .affiliate-float-desc { font-size: 11px; color: var(--text2); margin-top: 1px; }
+    .affiliate-float-close {
+      background: none; border: none; color: var(--text3);
+      cursor: pointer; font-size: 14px; align-self: flex-start;
+    }
+    .monetization-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .mon-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 1.25rem;
+    }
+    .mon-label { font-size: 11px; color: var(--text3); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 6px; }
+    .mon-value { font-family: var(--font-head); font-size: 1.4rem; font-weight: 700; margin-bottom: 2px; }
+    .mon-delta { font-size: 12px; font-weight: 500; }
+    .mon-bar-wrap { height: 4px; background: var(--bg3); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+    .mon-bar { height: 100%; border-radius: 2px; transition: width .8s ease; }
+    .alert-manager {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r2); overflow: hidden; margin-top: 1.5rem;
+    }
+    .alert-manager-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border);
+    }
+    .alert-list { padding: .5rem 0; }
+    .alert-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: .75rem 1.5rem; border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .alert-row:last-child { border-bottom: none; }
+    .alert-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .alert-coin { font-weight: 500; min-width: 60px; }
+    .alert-cond { color: var(--text2); flex: 1; }
+    .alert-status { font-size: 11px; padding: 2px 8px; border-radius: 100px; font-weight: 500; }
+    .alert-del { background: none; border: none; color: var(--text3); cursor: pointer; transition: color .2s; }
+    .alert-del:hover { color: var(--red); }
+    .prog-seo {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r2); padding: 1.5rem; margin-top: 1.5rem;
+    }
+    .prog-seo-title { font-family: var(--font-head); font-size: 1rem; font-weight: 700; margin-bottom: .5rem; }
+    .prog-seo-desc { font-size: 13px; color: var(--text2); margin-bottom: 1.25rem; }
+    .prog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: .75rem; }
+    .prog-card {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1rem; cursor: pointer;
+      transition: border-color .2s;
+    }
+    .prog-card:hover { border-color: var(--accent); }
+    .prog-card-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+    .prog-card-url { font-size: 11px; color: var(--accent); margin-bottom: 6px; font-family: var(--font-head); }
+    .prog-card-meta { font-size: 11px; color: var(--text3); }
+
+    /* BACK TO TOP */
+    .back-to-top {
+      position: fixed; bottom: 28px; right: 72px; z-index: 88;
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--surface2); border: 1px solid var(--border2);
+      color: var(--text2); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px;
+      opacity: 0; transform: translateY(10px); pointer-events: none;
+      transition: opacity .3s, transform .3s, background .2s, color .2s;
+    }
+    .back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
+    .back-to-top:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+    /* PRICE FLASH */
+    @keyframes flashUp { 0%{background:transparent} 25%{background:rgba(0,208,132,0.2)} 100%{background:transparent} }
+    @keyframes flashDown { 0%{background:transparent} 25%{background:rgba(255,77,106,0.2)} 100%{background:transparent} }
+    .flash-up td { animation: flashUp 1s ease; }
+    .flash-down td { animation: flashDown 1s ease; }
+
+    /* SCROLL REVEAL */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .55s ease, transform .55s ease; }
+    .reveal.revealed { opacity: 1; transform: translateY(0); }
+
+    /* CHART TOOLTIP */
+    .chart-tooltip {
+      background: var(--surface2) !important;
+      border: 1px solid var(--border2) !important;
+      border-radius: 8px !important;
+      color: var(--text) !important;
+      font-family: var(--font-body) !important;
+      font-size: 12px !important;
+      padding: 8px 12px !important;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">⚡ Criptum21</a>
+  <ul class="nav-links">
+    <li><a href="#mercado" class="active">Mercado</a></li>
+    <li><a href="#portafolio">Portafolio</a></li>
+    <li><a href="#calculadoras">Calculadoras</a></li>
+    <li><a href="#exchanges">Exchanges</a></li>
+    <li><a href="#blog">Blog</a></li>
+  </ul>
+  <a href="#exchanges" class="nav-cta">Comenzar a invertir</a>
+  <button class="nav-hamburger" onclick="toggleMobileNav()" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE NAV -->
+<div class="nav-mobile" id="nav-mobile">
+  <a href="#mercado" onclick="closeMobileNav()">Mercado</a>
+  <a href="#portafolio" onclick="closeMobileNav()">Portafolio</a>
+  <a href="#calculadoras" onclick="closeMobileNav()">Calculadoras</a>
+  <a href="#exchanges" onclick="closeMobileNav()">Exchanges</a>
+  <a href="#blog" onclick="closeMobileNav()">Blog</a>
+  <a href="#exchanges" onclick="closeMobileNav()" style="color:var(--accent);font-weight:500;">Comenzar a invertir →</a>
+</div>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-track" id="ticker"></div>
+</div>
+
+<div class="wrapper">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-inner">
+        <div>
+          <div class="hero-tag"><span class="hero-tag-dot"></span> Precios actualizados en tiempo real</div>
+          <h1 class="hero-title">Tu plataforma de<br><em>finanzas cripto</em><br>en español</h1>
+          <p class="hero-sub">Precios en vivo, calculadoras de inversión y guías para invertir desde Chile, México, Colombia y toda Latinoamérica.</p>
+          <div class="hero-actions">
+            <a href="#mercado" class="btn-primary"><i class="fas fa-chart-line"></i> Ver mercado</a>
+            <a href="#calculadoras" class="btn-outline"><i class="fas fa-calculator"></i> Calculadoras</a>
+          </div>
+        </div>
+        <div class="hero-card">
+          <div class="hero-card-header">
+            <span style="font-size:14px;font-weight:500;">Bitcoin (BTC)</span>
+            <span class="live-badge"><span class="live-dot"></span> En vivo</span>
+          </div>
+          <div class="hero-chart-area">
+            <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:1rem;">
+              <span id="hero-price" style="font-family:var(--font-head);font-size:1.5rem;font-weight:800;">—</span>
+              <span id="hero-change" class="pill up">—</span>
+            </div>
+            <div class="hero-chart-wrap"><canvas id="hero-chart"></canvas></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <div class="container">
+    <div class="stats-bar">
+      <div class="stat-cell">
+        <div class="stat-label">Cap. de mercado total</div>
+        <div class="stat-value" id="stat-mcap">—</div>
+        <div class="stat-sub">Mercado global</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Volumen 24h</div>
+        <div class="stat-value" id="stat-vol">—</div>
+        <div class="stat-sub">Todas las monedas</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Dominancia BTC</div>
+        <div class="stat-value" id="stat-dom">—</div>
+        <div class="stat-sub">Del mercado total</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Monedas activas</div>
+        <div class="stat-value" id="stat-coins">—</div>
+        <div class="stat-sub">En seguimiento</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MERCADO -->
+  <section id="mercado">
+    <div class="container">
+      <div class="section-label">Mercado</div>
+      <div class="section-title">Precios en tiempo real</div>
+      <p class="section-sub">Las principales criptomonedas actualizadas al instante. Datos de CoinGecko.</p>
+
+      <div class="crypto-table-wrap">
+        <div class="table-controls">
+          <div class="search-wrap">
+            <i class="fas fa-search"></i>
+            <input type="text" class="search-input" id="search-input" placeholder="Buscar moneda..." oninput="filterCoins(this.value)" />
+          </div>
+          <div class="table-tabs">
+            <button class="tab active" onclick="setFilter('all',this)">Todo el mercado</button>
+            <button class="tab" onclick="setFilter('top10',this)">Top 10</button>
+            <button class="tab" onclick="setFilter('gainers',this)">Ganadoras</button>
+            <button class="tab" onclick="setFilter('losers',this)">Perdedoras</button>
+          </div>
+        </div>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Moneda</th>
+                <th class="num">Precio USD</th>
+                <th class="num">1h</th>
+                <th class="num">24h</th>
+                <th class="num">7d</th>
+                <th class="num">Cap. mercado</th>
+                <th class="num">Vol. 24h</th>
+                <th class="num">7 días</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody id="crypto-table-body">
+              <tr><td colspan="10" style="text-align:center;padding:2rem;color:var(--text3);">
+                <i class="fas fa-circle-notch fa-spin"></i> Cargando datos...
+              </td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CALCULADORAS -->
+  <section id="calculadoras" style="background: var(--bg2); margin: 0; padding: 4rem 0;">
+    <div class="container">
+      <div class="section-label">Herramientas</div>
+      <div class="section-title">Calculadoras financieras</div>
+      <p class="section-sub">Simula tus inversiones antes de tomar decisiones. Gratis y sin registro.</p>
+
+      <div class="calc-grid">
+
+        <!-- INTERÉS COMPUESTO -->
+        <div class="calc-card">
+          <div class="calc-icon">📈</div>
+          <div class="calc-title">Interés compuesto</div>
+          <div class="calc-desc">Calcula el crecimiento de tu inversión en el tiempo.</div>
+          <div class="input-row">
+            <div class="form-group">
+              <label class="form-label">Capital inicial (USD)</label>
+              <input type="number" class="form-input" id="ci-capital" value="1000" oninput="calcCompuesto()" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Aporte mensual</label>
+              <input type="number" class="form-input" id="ci-mensual" value="100" oninput="calcCompuesto()" />
+            </div>
+          </div>
+          <div class="input-row">
+            <div class="form-group">
+              <label class="form-label">Tasa anual (%)</label>
+              <input type="number" class="form-input" id="ci-tasa" value="12" oninput="calcCompuesto()" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Años</label>
+              <input type="number" class="form-input" id="ci-años" value="5" oninput="calcCompuesto()" />
+            </div>
+          </div>
+          <div class="calc-result" id="ci-result">
+            <div class="result-label">Total acumulado</div>
+            <div class="result-value" id="ci-total">—</div>
+            <div class="result-detail" id="ci-detail"></div>
+          </div>
+        </div>
+
+        <!-- P&L CRIPTO -->
+        <div class="calc-card">
+          <div class="calc-icon">₿</div>
+          <div class="calc-title">Ganancia/Pérdida cripto</div>
+          <div class="calc-desc">Calcula tu rentabilidad exacta en una operación cripto.</div>
+          <div class="input-row">
+            <div class="form-group">
+              <label class="form-label">Inversión (USD)</label>
+              <input type="number" class="form-input" id="pl-inversion" value="500" oninput="calcPL()" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Precio de compra</label>
+              <input type="number" class="form-input" id="pl-compra" value="40000" oninput="calcPL()" />
+            </div>
+          </div>
+          <div class="input-row">
+            <div class="form-group">
+              <label class="form-label">Precio actual/venta</label>
+              <input type="number" class="form-input" id="pl-venta" value="65000" oninput="calcPL()" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Comisión exchange (%)</label>
+              <input type="number" class="form-input" id="pl-fee" value="0.1" step="0.01" oninput="calcPL()" />
+            </div>
+          </div>
+          <div class="calc-result" id="pl-result">
+            <div class="result-label">Ganancia neta</div>
+            <div class="result-value" id="pl-total">—</div>
+            <div class="result-detail" id="pl-detail"></div>
+          </div>
+        </div>
+
+        <!-- CONVERSIÓN CRIPTO -->
+        <div class="calc-card">
+          <div class="calc-icon">🔄</div>
+          <div class="calc-title">Conversor cripto</div>
+          <div class="calc-desc">Convierte entre criptomonedas y monedas locales al precio actual.</div>
+          <div class="form-group">
+            <label class="form-label">Monto</label>
+            <input type="number" class="form-input" id="conv-amount" value="1" oninput="calcConversion()" />
+          </div>
+          <div class="input-row">
+            <div class="form-group">
+              <label class="form-label">De</label>
+              <select class="form-input" id="conv-from" onchange="calcConversion()">
+                <option value="btc">Bitcoin (BTC)</option>
+                <option value="eth">Ethereum (ETH)</option>
+                <option value="usdt">Tether (USDT)</option>
+                <option value="bnb">BNB</option>
+                <option value="sol">Solana (SOL)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">A</label>
+              <select class="form-input" id="conv-to" onchange="calcConversion()">
+                <option value="usd">Dólar (USD)</option>
+                <option value="clp">Peso Chile (CLP)</option>
+                <option value="mxn">Peso México (MXN)</option>
+                <option value="cop">Peso Colombia (COP)</option>
+                <option value="ars">Peso Argentina (ARS)</option>
+                <option value="brl">Real Brasil (BRL)</option>
+              </select>
+            </div>
+          </div>
+          <div class="calc-result">
+            <div class="result-label">Resultado estimado</div>
+            <div class="result-value" id="conv-result" style="font-size:1.3rem;">—</div>
+            <div class="result-detail" id="conv-detail">Precio referencial basado en CoinGecko</div>
+          </div>
+        </div>
+
+        <!-- DOLAR COSTO PROMEDIO -->
+        <div class="calc-card">
+          <div class="calc-icon">📅</div>
+          <div class="calc-title">DCA — Costo promedio</div>
+          <div class="calc-desc">Simula compras periódicas para reducir el impacto de la volatilidad.</div>
+          <div class="input-row">
+            <div class="form-group">
+              <label class="form-label">Aporte periódico (USD)</label>
+              <input type="number" class="form-input" id="dca-aporte" value="50" oninput="calcDCA()" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Frecuencia</label>
+              <select class="form-input" id="dca-freq" onchange="calcDCA()">
+                <option value="7">Semanal</option>
+                <option value="15">Quincenal</option>
+                <option value="30" selected>Mensual</option>
+              </select>
+            </div>
+          </div>
+          <div class="input-row">
+            <div class="form-group">
+              <label class="form-label">Meses de inversión</label>
+              <input type="number" class="form-input" id="dca-meses" value="24" oninput="calcDCA()" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Rendimiento anual est. (%)</label>
+              <input type="number" class="form-input" id="dca-rend" value="60" oninput="calcDCA()" />
+            </div>
+          </div>
+          <div class="calc-result" id="dca-result">
+            <div class="result-label">Valor estimado al final</div>
+            <div class="result-value" id="dca-total">—</div>
+            <div class="result-detail" id="dca-detail"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- PORTAFOLIO FASE 2 -->
+  <section id="portafolio" style="padding: 4rem 0;">
+    <div class="container">
+      <div class="section-label">Fase 2 — Dashboard</div>
+      <div class="section-title">Tu portafolio</div>
+      <p class="section-sub">Registra tus posiciones y sigue tu P&L en tiempo real. Los datos se guardan en tu navegador.</p>
+
+      <!-- Stats del portafolio -->
+      <div class="portfolio-grid" id="portfolio-stats">
+        <div class="portfolio-stat">
+          <div class="portfolio-stat-label">Valor total</div>
+          <div class="portfolio-stat-value" id="pf-total">$0.00</div>
+          <div class="portfolio-stat-sub" id="pf-total-change" style="color:var(--text3);">—</div>
+        </div>
+        <div class="portfolio-stat">
+          <div class="portfolio-stat-label">Ganancia / Pérdida</div>
+          <div class="portfolio-stat-value" id="pf-pnl">$0.00</div>
+          <div class="portfolio-stat-sub" id="pf-pnl-pct" style="color:var(--text3);">0.00%</div>
+        </div>
+        <div class="portfolio-stat">
+          <div class="portfolio-stat-label">Mejor posición</div>
+          <div class="portfolio-stat-value" id="pf-best">—</div>
+          <div class="portfolio-stat-sub" id="pf-best-pct" style="color:var(--green);">—</div>
+        </div>
+        <div class="portfolio-stat">
+          <div class="portfolio-stat-label">Posiciones activas</div>
+          <div class="portfolio-stat-value" id="pf-count">0</div>
+          <div class="portfolio-stat-sub" style="color:var(--text3);">monedas</div>
+        </div>
+      </div>
+
+      <!-- Tabla de posiciones -->
+      <div class="portfolio-table-wrap">
+        <div class="portfolio-header">
+          <span class="portfolio-title">Mis posiciones</span>
+          <div style="display:flex;gap:8px;">
+            <button onclick="exportPortfolioCSV()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text2);padding:8px 14px;border-radius:8px;font-size:13px;cursor:pointer;font-family:var(--font-body);transition:all .2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--text2)'">
+              <i class="fas fa-download"></i> CSV
+            </button>
+            <button class="btn-add" onclick="openAddModal()">
+              <i class="fas fa-plus"></i> Agregar posición
+            </button>
+          </div>
+        </div>
+        <div id="portfolio-body">
+          <div class="empty-state">
+            <i class="fas fa-chart-pie"></i>
+            <p>Aún no tienes posiciones registradas.<br>Agrega tu primera inversión para empezar.</p>
+            <button class="btn-add" onclick="openAddModal()" style="margin:0 auto;">
+              <i class="fas fa-plus"></i> Agregar posición
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Calculadora de rebalanceo -->
+      <div class="rebalance-wrap" id="rebalance-section" style="display:none;">
+        <div class="rebalance-title">Calculadora de rebalanceo</div>
+        <div class="rebalance-desc">Ajusta los porcentajes objetivo de tu portafolio. Total debe sumar 100%.</div>
+        <div id="rebalance-sliders"></div>
+        <div class="rebalance-total" id="rebalance-total">Total: 0%</div>
+        <div id="rebalance-actions" style="margin-top:1rem;display:none;">
+          <div style="font-size:13px;color:var(--text2);margin-bottom:.75rem;">Acciones sugeridas para rebalancear:</div>
+          <div id="rebalance-suggestions"></div>
+        </div>
+      </div>
+
+      <!-- Watchlist -->
+      <div style="margin-top:2.5rem;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
+          <div>
+            <div class="section-label" style="margin-bottom:2px;">Seguimiento</div>
+            <div style="font-family:var(--font-head);font-size:1.1rem;font-weight:700;">Watchlist</div>
+          </div>
+          <button class="btn-add" onclick="openWatchModal()">
+            <i class="fas fa-eye"></i> Agregar a watchlist
+          </button>
+        </div>
+        <div class="watchlist-grid" id="watchlist-grid">
+          <div style="color:var(--text3);font-size:13px;padding:1rem 0;">
+            Agrega monedas para hacer seguimiento con alertas de precio.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODAL: Agregar posición -->
+  <div class="modal-overlay" id="add-modal">
+    <div class="modal">
+      <div class="modal-title">Agregar posición</div>
+      <div class="form-group">
+        <label class="form-label">Moneda</label>
+        <select class="form-input" id="add-coin" onchange="onAddCoinChange()"></select>
+      </div>
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">Cantidad</label>
+          <input type="number" class="form-input" id="add-qty" placeholder="Ej: 0.5" step="any" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Precio de compra (USD)</label>
+          <input type="number" class="form-input" id="add-price" placeholder="Ej: 45000" step="any" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Fecha de compra</label>
+        <input type="date" class="form-input" id="add-date" />
+      </div>
+      <div style="display:flex;gap:10px;margin-top:1.25rem;">
+        <button class="calc-btn" onclick="savePosition()" style="flex:1;">Guardar posición</button>
+        <button onclick="closeAddModal()" style="flex:1;background:var(--surface2);border:1px solid var(--border2);color:var(--text);padding:11px;border-radius:8px;cursor:pointer;font-family:var(--font-body);font-size:14px;">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Watchlist -->
+  <div class="modal-overlay" id="watch-modal">
+    <div class="modal">
+      <div class="modal-title">Agregar a watchlist</div>
+      <div class="form-group">
+        <label class="form-label">Moneda</label>
+        <select class="form-input" id="watch-coin"></select>
+      </div>
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">Alerta precio alto (USD)</label>
+          <input type="number" class="form-input" id="watch-high" placeholder="Opcional" step="any" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Alerta precio bajo (USD)</label>
+          <input type="number" class="form-input" id="watch-low" placeholder="Opcional" step="any" />
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:1.25rem;">
+        <button class="calc-btn" onclick="saveWatch()" style="flex:1;">Agregar</button>
+        <button onclick="closeWatchModal()" style="flex:1;background:var(--surface2);border:1px solid var(--border2);color:var(--text);padding:11px;border-radius:8px;cursor:pointer;font-family:var(--font-body);font-size:14px;">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Detalle de moneda -->
+  <div class="detail-overlay" id="detail-overlay">
+    <div class="detail-modal">
+      <div class="detail-header">
+        <div class="detail-icon" id="detail-icon"></div>
+        <div>
+          <div style="font-family:var(--font-head);font-size:1.2rem;font-weight:700;" id="detail-name"></div>
+          <div style="font-size:13px;color:var(--text3);" id="detail-symbol"></div>
+        </div>
+        <div style="margin-left:1rem;">
+          <div style="font-family:var(--font-head);font-size:1.5rem;font-weight:800;" id="detail-price"></div>
+          <div style="font-size:13px;margin-top:2px;" id="detail-change"></div>
+        </div>
+        <button class="detail-close" onclick="closeDetail()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="detail-body">
+        <div class="detail-stats" id="detail-stats"></div>
+        <div class="timeframe-tabs">
+          <button class="tf-tab active" onclick="setTF('1',this)">1D</button>
+          <button class="tf-tab" onclick="setTF('7',this)">7D</button>
+          <button class="tf-tab" onclick="setTF('30',this)">1M</button>
+          <button class="tf-tab" onclick="setTF('90',this)">3M</button>
+          <button class="tf-tab" onclick="setTF('365',this)">1A</button>
+        </div>
+        <div style="position:relative;height:260px;">
+          <canvas id="detail-chart"></canvas>
+        </div>
+        <div style="margin-top:1.5rem;text-align:center;">
+          <a id="detail-buy-btn" href="#exchanges" onclick="closeDetail()" class="btn-primary" style="display:inline-flex;">
+            <i class="fas fa-shopping-cart"></i> Comprar en exchange recomendado
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXCHANGES AFILIADOS -->
+  <section id="exchanges">
+    <div class="container">
+      <div class="section-label">Exchanges recomendados</div>
+      <div class="section-title">¿Dónde comprar cripto en LATAM?</div>
+      <p class="section-sub">Plataformas verificadas con buen soporte en español y opciones de depósito local.</p>
+
+      <div class="affiliate-grid">
+
+        <div class="affiliate-card featured">
+          <div class="affiliate-header">
+            <div class="exchange-logo" style="background:linear-gradient(135deg,#f0b90b,#e8a500);">B</div>
+            <div>
+              <div class="exchange-name">Binance</div>
+              <div class="exchange-country">🌎 Global — acepta CLP, MXN, COP</div>
+            </div>
+            <span class="affiliate-badge">⭐ Recomendado</span>
+          </div>
+          <ul class="affiliate-features">
+            <li><i class="fas fa-check"></i> Más de 350 criptomonedas disponibles</li>
+            <li><i class="fas fa-check"></i> Comisiones desde 0.1% por operación</li>
+            <li><i class="fas fa-check"></i> App móvil en español</li>
+            <li><i class="fas fa-check"></i> P2P con pesos latinoamericanos</li>
+          </ul>
+          <div class="affiliate-bonus">🎁 Hasta 20% de descuento en comisiones con nuestro link</div>
+          <a href="https://accounts.binance.com/register?ref=TUREFID" target="_blank" rel="noopener sponsored" class="affiliate-btn">
+            Abrir cuenta en Binance <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+
+        <div class="affiliate-card">
+          <div class="affiliate-header">
+            <div class="exchange-logo" style="background:linear-gradient(135deg,#00a86b,#007a4d);">B</div>
+            <div>
+              <div class="exchange-name">Buda.com</div>
+              <div class="exchange-country">🇨🇱🇨🇴🇵🇪 Chile, Colombia, Perú</div>
+            </div>
+          </div>
+          <ul class="affiliate-features">
+            <li><i class="fas fa-check"></i> Exchange regulado en LATAM</li>
+            <li><i class="fas fa-check"></i> Depósito en pesos sin conversión</li>
+            <li><i class="fas fa-check"></i> Soporte en español 24/7</li>
+            <li><i class="fas fa-check"></i> Ideal para principiantes</li>
+          </ul>
+          <div class="affiliate-bonus">🎁 Sin comisión en tu primera compra</div>
+          <a href="https://buda.com" target="_blank" rel="noopener sponsored" class="affiliate-btn">
+            Ir a Buda.com <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+
+        <div class="affiliate-card">
+          <div class="affiliate-header">
+            <div class="exchange-logo" style="background:linear-gradient(135deg,#6851ff,#4a38c4);">B</div>
+            <div>
+              <div class="exchange-name">Bitso</div>
+              <div class="exchange-country">🇲🇽🇦🇷🇧🇷 México, Argentina, Brasil</div>
+            </div>
+          </div>
+          <ul class="affiliate-features">
+            <li><i class="fas fa-check"></i> Líder en México con más de 8M usuarios</li>
+            <li><i class="fas fa-check"></i> Compra con SPEI / OXXO</li>
+            <li><i class="fas fa-check"></i> Staking disponible</li>
+            <li><i class="fas fa-check"></i> Interfaz muy simple para comenzar</li>
+          </ul>
+          <div class="affiliate-bonus">🎁 Bono de bienvenida para nuevos usuarios</div>
+          <a href="https://bitso.com" target="_blank" rel="noopener sponsored" class="affiliate-btn">
+            Ir a Bitso <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+
+        <div class="affiliate-card">
+          <div class="affiliate-header">
+            <div class="exchange-logo" style="background:linear-gradient(135deg,#0033ad,#00247a);">C</div>
+            <div>
+              <div class="exchange-name">Coinbase</div>
+              <div class="exchange-country">🌎 Global — soporte LATAM</div>
+            </div>
+          </div>
+          <ul class="affiliate-features">
+            <li><i class="fas fa-check"></i> El exchange más regulado del mundo</li>
+            <li><i class="fas fa-check"></i> Ideal para perfil conservador</li>
+            <li><i class="fas fa-check"></i> Aprende y gana cripto gratis</li>
+            <li><i class="fas fa-check"></i> Wallet integrada y segura</li>
+          </ul>
+          <div class="affiliate-bonus">🎁 $10 USD en BTC al registrarte</div>
+          <a href="https://coinbase.com" target="_blank" rel="noopener sponsored" class="affiliate-btn">
+            Ir a Coinbase <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+
+      </div>
+
+      <p style="font-size:12px;color:var(--text3);margin-top:1.25rem;text-align:center;">
+        * Los links de esta sección son enlaces de afiliados. Pueden generar una comisión para Criptum21 sin costo adicional para ti. Siempre investiga antes de invertir.
+      </p>
+    </div>
+  </section>
+
+  <!-- BLOG -->
+  <!-- FASE 3: BLOG COMPLETO -->
+  <section id="blog" style="background: var(--bg2); margin: 0; padding: 4rem 0;">
+    <div class="container">
+      <div class="section-label">Blog & Guías SEO</div>
+      <div class="section-title">Aprende a invertir en cripto</div>
+      <p class="section-sub">Guías en español para todos los niveles. Desde qué es Bitcoin hasta estrategias avanzadas de DeFi para Chile, México y Colombia.</p>
+
+      <!-- Filtros de categoría -->
+      <div class="blog-filters" id="blog-filters"></div>
+
+      <!-- Grid de artículos -->
+      <div class="blog-grid" id="blog-grid"></div>
+
+      <div style="text-align:center;margin-top:2.5rem;" id="blog-load-more">
+        <button class="btn-outline" onclick="loadMoreArticles()">
+          Ver más artículos <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPARATIVA DE EXCHANGES -->
+  <section id="comparativa" style="padding: 4rem 0;">
+    <div class="container">
+      <div class="section-label">Comparativa</div>
+      <div class="section-title">¿Qué exchange es mejor para ti?</div>
+      <p class="section-sub">Comparamos las principales plataformas disponibles en LATAM según comisiones, monedas soportadas y facilidad de uso.</p>
+
+      <div class="compare-table-wrap">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Exchange</th>
+              <th>Países LATAM</th>
+              <th>Comisión maker</th>
+              <th>Comisión taker</th>
+              <th>Monedas</th>
+              <th>KYC</th>
+              <th>P2P</th>
+              <th>Staking</th>
+              <th>Calificación</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody id="compare-body"></tbody>
+        </table>
+      </div>
+
+      <div style="margin-top:1rem;font-size:12px;color:var(--text3);text-align:center;">
+        * Comisiones pueden variar. Verifica siempre en el sitio oficial del exchange.
+        Los links de acción son enlaces de afiliados que pueden generar una comisión para Criptum21.
+      </div>
+    </div>
+  </section>
+
+  <!-- MODAL ARTÍCULO -->
+  <div class="article-overlay" id="article-overlay">
+    <div class="article-modal">
+      <div class="article-modal-header">
+        <div>
+          <div class="article-modal-cat" id="art-cat"></div>
+          <h1 class="article-modal-title" id="art-title"></h1>
+          <div class="article-modal-meta" id="art-meta"></div>
+        </div>
+        <button class="detail-close" onclick="closeArticle()" style="align-self:flex-start;margin-left:auto;flex-shrink:0;">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="article-modal-body" id="art-body"></div>
+      <div class="article-modal-footer" id="art-footer"></div>
+    </div>
+  </div>
+
+
+  <!-- FASE 4: DASHBOARD MONETIZACIÓN -->
+  <section id="monetizacion" style="padding:4rem 0;background:var(--bg2);margin:0;">
+    <div class="container">
+      <div class="section-label">Fase 4 — Automatización</div>
+      <div class="section-title">Dashboard de monetización</div>
+      <p class="section-sub">Métricas en tiempo real de rendimiento publicitario y conversiones de afiliados. Actualización automática.</p>
+
+      <div class="monetization-grid">
+        <div class="mon-card">
+          <div class="mon-label">Visitas hoy (est.)</div>
+          <div class="mon-value" id="mon-visits">—</div>
+          <div class="mon-delta up" id="mon-visits-d">—</div>
+          <div class="mon-bar-wrap"><div class="mon-bar" id="mon-visits-bar" style="background:var(--accent);width:0%"></div></div>
+        </div>
+        <div class="mon-card">
+          <div class="mon-label">RPM estimado AdSense</div>
+          <div class="mon-value" id="mon-rpm">—</div>
+          <div class="mon-delta" id="mon-rpm-d">Nicho finanzas cripto</div>
+          <div class="mon-bar-wrap"><div class="mon-bar" id="mon-rpm-bar" style="background:var(--green);width:0%"></div></div>
+        </div>
+        <div class="mon-card">
+          <div class="mon-label">Clicks afiliados hoy</div>
+          <div class="mon-value" id="mon-clicks">—</div>
+          <div class="mon-delta up" id="mon-clicks-d">—</div>
+          <div class="mon-bar-wrap"><div class="mon-bar" id="mon-clicks-bar" style="background:var(--amber);width:0%"></div></div>
+        </div>
+        <div class="mon-card">
+          <div class="mon-label">Ingreso estimado mes</div>
+          <div class="mon-value" id="mon-income">—</div>
+          <div class="mon-delta" id="mon-income-d">Afiliados + AdSense</div>
+          <div class="mon-bar-wrap"><div class="mon-bar" id="mon-income-bar" style="background:var(--green);width:0%"></div></div>
+        </div>
+      </div>
+
+      <!-- Gráfico de ingresos -->
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:1.5rem;margin-bottom:1.5rem;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:12px;">
+          <div style="font-family:var(--font-head);font-size:1rem;font-weight:700;">Proyección de ingresos (12 meses)</div>
+          <div style="display:flex;gap:16px;font-size:12px;color:var(--text3);">
+            <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:3px;border-radius:2px;background:var(--accent);display:inline-block;"></span>Afiliados</span>
+            <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:3px;border-radius:2px;background:var(--green);display:inline-block;"></span>AdSense</span>
+            <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:3px;border-radius:2px;background:var(--amber);display:inline-block;"></span>Newsletter</span>
+          </div>
+        </div>
+        <div style="position:relative;height:200px;"><canvas id="income-chart"></canvas></div>
+      </div>
+
+      <!-- Alertas de precio activas -->
+      <div class="alert-manager" id="alert-manager-section">
+        <div class="alert-manager-header">
+          <span style="font-family:var(--font-head);font-size:1rem;font-weight:700;">Alertas de precio activas</span>
+          <button class="btn-add" onclick="openWatchModal()" style="font-size:12px;padding:6px 14px;">
+            <i class="fas fa-plus"></i> Nueva alerta
+          </button>
+        </div>
+        <div class="alert-list" id="alert-list">
+          <div style="padding:1.5rem;text-align:center;color:var(--text3);font-size:13px;">
+            No hay alertas activas. Agrégalas desde la sección Portafolio → Watchlist.
+          </div>
+        </div>
+      </div>
+
+      <!-- Contenido programático SEO -->
+      <div class="prog-seo">
+        <div class="prog-seo-title">Páginas SEO programáticas</div>
+        <div class="prog-seo-desc">Auto-generadas por moneda. Cada una tiene URL propia, meta tags únicos y datos en vivo — sin escribir una sola página a mano.</div>
+        <div class="prog-grid" id="prog-grid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-wrap" id="toast-wrap"></div>
+<button class="back-to-top" id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Volver arriba">
+  <i class="fas fa-arrow-up"></i>
+</button>
+
+  <!-- FLOATING AFFILIATE BANNER (rota contextualmente) -->
+  <div class="affiliate-float" id="affiliate-float" style="display:none;" onclick="affiliateFloatClick()">
+    <div class="affiliate-float-logo" id="aff-float-logo"></div>
+    <div class="affiliate-float-text">
+      <div class="affiliate-float-name" id="aff-float-name"></div>
+      <div class="affiliate-float-desc" id="aff-float-desc"></div>
+    </div>
+    <button class="affiliate-float-close" onclick="event.stopPropagation();hideAffiliateFloat()" title="Cerrar">✕</button>
+  </div>
+
+  <!-- REFRESH BAR -->
+  <div class="refresh-bar"><div class="refresh-progress" id="refresh-progress"></div></div>
+
+
+  <!-- NEWSLETTER -->
+  <div class="container">
+    <div class="newsletter-section">
+      <div class="newsletter-title">📬 Recibe el mercado en tu correo</div>
+      <p class="newsletter-sub">Resumen semanal con los movimientos más importantes, oportunidades y análisis. Sin spam.</p>
+      <form class="newsletter-form" name="newsletter" netlify netlify-honeypot="bot-field" onsubmit="handleNewsletterSubmit(event)">
+        <input type="hidden" name="form-name" value="newsletter" />
+        <input type="hidden" name="bot-field" />
+        <input type="email" class="newsletter-input" name="email" id="nl-email" placeholder="tu@email.com" required />
+        <button type="submit" class="btn-primary">Suscribirse</button>
+      </form>
+      <p style="font-size:12px;color:var(--text3);margin-top:1rem;">+3.200 inversores de LATAM ya suscritos. Sin spam, cancela cuando quieras.</p>
+    </div>
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div class="container">
+    <div class="disclaimer">
+      ⚠️ <strong>Aviso de riesgo:</strong> Las criptomonedas son activos altamente volátiles. La información publicada en Criptum21 es solo con fines informativos y no constituye asesoramiento financiero. Invertir en criptomonedas conlleva un riesgo significativo de pérdida de capital. Nunca inviertas más de lo que estás dispuesto a perder.
+    </div>
+  </div>
+
+</div><!-- /wrapper -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="nav-logo" style="font-size:1.2rem;">⚡ Criptum21</a>
+        <p>Tu referencia de finanzas e inversiones cripto para Latinoamérica. Datos en tiempo real, sin registro, sin costos.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Mercado</h4>
+        <ul>
+          <li><a href="#mercado">Precios en vivo</a></li>
+          <li><a href="#calculadoras">Calculadoras</a></li>
+          <li><a href="#">Portafolio</a></li>
+          <li><a href="#">Alertas de precio</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Aprende</h4>
+        <ul>
+          <li><a href="#">¿Qué es Bitcoin?</a></li>
+          <li><a href="#">Cómo comprar cripto</a></li>
+          <li><a href="#">DeFi para principiantes</a></li>
+          <li><a href="#">Seguridad en cripto</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Aviso de riesgo</a></li>
+          <li><a href="#">Política de privacidad</a></li>
+          <li><a href="#">Términos de uso</a></li>
+          <li><a href="#">Divulgación de afiliados</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Criptum21. Todos los derechos reservados.</span>
+      <span>Datos: CoinGecko API · No es asesoramiento financiero</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ===================== STATE =====================
+let allCoins = [];
+let currentFilter = 'all';
+let searchQuery = '';
+let cryptoPrices = {};
+let heroChart = null;
+let sparkCharts = {};
+
+// ===================== FORMATTERS =====================
+const fmt = (n) => n >= 1e12 ? '$' + (n/1e12).toFixed(2) + 'T'
+  : n >= 1e9 ? '$' + (n/1e9).toFixed(2) + 'B'
+  : n >= 1e6 ? '$' + (n/1e6).toFixed(2) + 'M'
+  : '$' + n.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+
+const fmtPrice = (n) => n >= 100 ? '$' + n.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})
+  : n >= 1 ? '$' + n.toFixed(4)
+  : '$' + n.toFixed(6);
+
+const fmtPct = (n) => (n >= 0 ? '+' : '') + n.toFixed(2) + '%';
+
+// ===================== COIN EMOJIS =====================
+const coinEmoji = {
+  bitcoin:'₿', ethereum:'Ξ', tether:'₮', 'binancecoin':'⬡',
+  'usd-coin':'◎', solana:'◎', xrp:'✕', cardano:'₳',
+  dogecoin:'Ð', avalanche:'▲', polkadot:'●', chainlink:'⬡',
+  'matic-network':'⬡', litecoin:'Ł', 'shiba-inu':'🐕'
+};
+const coinColor = {
+  bitcoin:'#f7931a', ethereum:'#627eea', tether:'#26a17b',
+  'binancecoin':'#f0b90b', 'usd-coin':'#2775ca', solana:'#9945ff',
+  xrp:'#346aa9', cardano:'#0033ad', dogecoin:'#c2a633',
+  avalanche:'#e84142', polkadot:'#e6007a'
+};
+
+// ===================== COINGECKO API =====================
+async function fetchMarketData() {
+  try {
+    const res = await fetch(
+      'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=true&price_change_percentage=1h,24h,7d',
+      { headers: { 'Accept': 'application/json' } }
+    );
+    if (!res.ok) throw new Error('API error');
+    const data = await res.json();
+    allCoins = data;
+    data.forEach(c => { cryptoPrices[c.id] = c.current_price; });
+    renderTable();
+    renderTicker();
+    updateHeroCard();
+    updateStats();
+    calcConversion();
+  } catch(e) {
+    console.warn('CoinGecko error, using demo data', e);
+    loadDemoData();
+  }
+}
+
+async function fetchGlobalData() {
+  try {
+    const res = await fetch('https://api.coingecko.com/api/v3/global');
+    if (!res.ok) return;
+    const { data } = await res.json();
+    const mcap = data.total_market_cap?.usd || 0;
+    const vol = data.total_volume?.usd || 0;
+    const dom = data.market_cap_percentage?.btc || 0;
+    const coins = data.active_cryptocurrencies || 0;
+    document.getElementById('stat-mcap').textContent = fmt(mcap);
+    document.getElementById('stat-vol').textContent = fmt(vol);
+    document.getElementById('stat-dom').textContent = dom.toFixed(1) + '%';
+    document.getElementById('stat-coins').textContent = coins.toLocaleString();
+  } catch(e) {}
+}
+
+function loadDemoData() {
+  allCoins = [
+    {id:'bitcoin',symbol:'BTC',name:'Bitcoin',image:'',current_price:80979,market_cap:1.60e12,total_volume:32.1e9,price_change_percentage_1h_in_currency:0.05,price_change_percentage_24h:0.05,price_change_percentage_7d_in_currency:2.1,sparkline_in_7d:{price:[76000,77500,79000,80000,79500,80500,80979]},market_cap_rank:1},
+    {id:'ethereum',symbol:'ETH',name:'Ethereum',image:'',current_price:2321,market_cap:280e9,total_volume:11.4e9,price_change_percentage_1h_in_currency:-0.1,price_change_percentage_24h:-0.34,price_change_percentage_7d_in_currency:1.8,sparkline_in_7d:{price:[2100,2150,2200,2250,2230,2300,2321]},market_cap_rank:2},
+    {id:'tether',symbol:'USDT',name:'Tether',image:'',current_price:1.00,market_cap:145e9,total_volume:58e9,price_change_percentage_1h_in_currency:0.01,price_change_percentage_24h:-0.02,price_change_percentage_7d_in_currency:0.01,sparkline_in_7d:{price:[1,1,1,1,1,1,1]},market_cap_rank:3},
+    {id:'xrp',symbol:'XRP',name:'XRP',image:'',current_price:1.46,market_cap:84e9,total_volume:4.2e9,price_change_percentage_1h_in_currency:0.4,price_change_percentage_24h:1.83,price_change_percentage_7d_in_currency:3.2,sparkline_in_7d:{price:[1.30,1.33,1.36,1.40,1.42,1.44,1.46]},market_cap_rank:4},
+    {id:'binancecoin',symbol:'BNB',name:'BNB',image:'',current_price:654,market_cap:92e9,total_volume:2.1e9,price_change_percentage_1h_in_currency:0.2,price_change_percentage_24h:0.47,price_change_percentage_7d_in_currency:1.5,sparkline_in_7d:{price:[620,628,635,642,648,651,654]},market_cap_rank:5},
+    {id:'solana',symbol:'SOL',name:'Solana',image:'',current_price:95,market_cap:46e9,total_volume:3.8e9,price_change_percentage_1h_in_currency:0.5,price_change_percentage_24h:1.36,price_change_percentage_7d_in_currency:4.1,sparkline_in_7d:{price:[86,88,90,91,92,94,95]},market_cap_rank:6},
+    {id:'dogecoin',symbol:'DOGE',name:'Dogecoin',image:'',current_price:0.11,market_cap:16e9,total_volume:1.2e9,price_change_percentage_1h_in_currency:0.3,price_change_percentage_24h:1.41,price_change_percentage_7d_in_currency:5.2,sparkline_in_7d:{price:[0.098,0.100,0.103,0.106,0.108,0.110,0.110]},market_cap_rank:7},
+    {id:'cardano',symbol:'ADA',name:'Cardano',image:'',current_price:0.52,market_cap:18e9,total_volume:0.5e9,price_change_percentage_1h_in_currency:0.1,price_change_percentage_24h:0.8,price_change_percentage_7d_in_currency:2.3,sparkline_in_7d:{price:[0.47,0.48,0.49,0.50,0.51,0.51,0.52]},market_cap_rank:8},
+    {id:'avalanche',symbol:'AVAX',name:'Avalanche',image:'',current_price:16.8,market_cap:7e9,total_volume:0.4e9,price_change_percentage_1h_in_currency:-0.2,price_change_percentage_24h:-1.1,price_change_percentage_7d_in_currency:2.4,sparkline_in_7d:{price:[15.5,15.8,16.0,16.2,16.4,16.6,16.8]},market_cap_rank:9},
+    {id:'polkadot',symbol:'DOT',name:'Polkadot',image:'',current_price:2.88,market_cap:4.3e9,total_volume:0.15e9,price_change_percentage_1h_in_currency:0.1,price_change_percentage_24h:0.4,price_change_percentage_7d_in_currency:1.6,sparkline_in_7d:{price:[2.65,2.70,2.75,2.78,2.82,2.85,2.88]},market_cap_rank:10},
+  ];
+  allCoins.forEach(c => { cryptoPrices[c.id] = c.current_price; });
+  renderTable();
+  renderTicker();
+  updateHeroCard();
+  document.getElementById('stat-mcap').textContent = '$2.63T';
+  document.getElementById('stat-vol').textContent = '$118B';
+  document.getElementById('stat-dom').textContent = '60.8%';
+  document.getElementById('stat-coins').textContent = '16,284';
+  calcConversion();
+}
+
+// ===================== HERO CARD =====================
+function updateHeroCard() {
+  const btc = allCoins.find(c => c.id === 'bitcoin');
+  if (!btc) return;
+  document.getElementById('hero-price').textContent = fmtPrice(btc.current_price);
+  const pct = btc.price_change_percentage_24h;
+  const el = document.getElementById('hero-change');
+  el.textContent = fmtPct(pct);
+  el.className = 'pill ' + (pct >= 0 ? 'up' : 'down');
+
+  if (heroChart) heroChart.destroy();
+  const spark = btc.sparkline_in_7d?.price || [];
+  const color = pct >= 0 ? '#00d084' : '#ff4d6a';
+  const ctx = document.getElementById('hero-chart').getContext('2d');
+  heroChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: spark.map((_,i) => i),
+      datasets: [{
+        data: spark,
+        borderColor: color,
+        borderWidth: 2,
+        fill: true,
+        backgroundColor: (ctx2) => {
+          const g = ctx2.chart.ctx.createLinearGradient(0,0,0,160);
+          g.addColorStop(0, color + '33');
+          g.addColorStop(1, color + '00');
+          return g;
+        },
+        tension: 0.4, pointRadius: 0
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { enabled: false } },
+      scales: { x: { display: false }, y: { display: false } },
+      animation: { duration: 800 }
+    }
+  });
+}
+
+// ===================== TICKER =====================
+function renderTicker() {
+  const coins = allCoins.slice(0, 15);
+  const html = [...coins, ...coins].map(c => {
+    const pct = c.price_change_percentage_24h;
+    const cl = pct >= 0 ? 'up' : 'down';
+    return `<div class="ticker-item">
+      <span class="ticker-symbol">${c.symbol.toUpperCase()}</span>
+      <span class="ticker-price">${fmtPrice(c.current_price)}</span>
+      <span class="ticker-change ${cl}">${fmtPct(pct)}</span>
+    </div>`;
+  }).join('');
+  document.getElementById('ticker').innerHTML = html;
+}
+
+// ===================== TABLE =====================
+function getFilteredCoins() {
+  let coins = [...allCoins];
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    coins = coins.filter(c => c.name.toLowerCase().includes(q) || c.symbol.toLowerCase().includes(q));
+  }
+  if (currentFilter === 'top10') coins = coins.slice(0,10);
+  else if (currentFilter === 'gainers') coins = coins.filter(c => c.price_change_percentage_24h > 0).sort((a,b) => b.price_change_percentage_24h - a.price_change_percentage_24h);
+  else if (currentFilter === 'losers') coins = coins.filter(c => c.price_change_percentage_24h < 0).sort((a,b) => a.price_change_percentage_24h - b.price_change_percentage_24h);
+  return coins;
+}
+
+let prevPrices = {};
+
+function renderTable() {
+  const coins = getFilteredCoins();
+  const body = document.getElementById('crypto-table-body');
+  Object.values(sparkCharts).forEach(ch => ch.destroy());
+  sparkCharts = {};
+  if (!coins.length) {
+    body.innerHTML = '<tr><td colspan="10" style="text-align:center;padding:2rem;color:var(--text3);">No se encontraron resultados</td></tr>';
+    return;
+  }
+  body.innerHTML = coins.map((c, i) => {
+    const pct1h = c.price_change_percentage_1h_in_currency || 0;
+    const pct24 = c.price_change_percentage_24h || 0;
+    const pct7d = c.price_change_percentage_7d_in_currency || 0;
+    const spark = c.sparkline_in_7d?.price || [];
+    const emoji = coinEmoji[c.id] || c.symbol.charAt(0).toUpperCase();
+    const bgColor = coinColor[c.id] || '#5c5c78';
+    return `<tr id="row-${c.id}">
+      <td class="rank">${i+1}</td>
+      <td>
+        <div class="coin-cell">
+          <div class="coin-icon" style="background:${bgColor}22;color:${bgColor};">${emoji}</div>
+          <div>
+            <div class="coin-name">${c.name}</div>
+            <div class="coin-symbol">${c.symbol.toUpperCase()}</div>
+          </div>
+        </div>
+      </td>
+      <td class="num" style="font-weight:500;">${fmtPrice(c.current_price)}</td>
+      <td class="num"><span class="pill ${pct1h>=0?'up':'down'}">${fmtPct(pct1h)}</span></td>
+      <td class="num"><span class="pill ${pct24>=0?'up':'down'}">${fmtPct(pct24)}</span></td>
+      <td class="num"><span class="pill ${pct7d>=0?'up':'down'}">${fmtPct(pct7d)}</span></td>
+      <td class="num">${fmt(c.market_cap)}</td>
+      <td class="num">${fmt(c.total_volume)}</td>
+      <td class="num">
+        <canvas class="sparkline" id="spark-${c.id}"></canvas>
+      </td>
+      <td><a href="https://accounts.binance.com/register?ref=TUREFID" target="_blank" rel="noopener sponsored" class="btn-buy">Comprar</a></td>
+    </tr>`;
+  }).join('');
+
+  // Flash filas con cambio de precio
+  coins.forEach(c => {
+    const prev = prevPrices[c.id];
+    if (prev !== undefined && prev !== c.current_price) {
+      const row = document.getElementById('row-' + c.id);
+      if (row) {
+        row.classList.remove('flash-up', 'flash-down');
+        void row.offsetWidth;
+        row.classList.add(c.current_price > prev ? 'flash-up' : 'flash-down');
+      }
+    }
+    prevPrices[c.id] = c.current_price;
+  });
+
+  // Render sparklines
+  coins.forEach(c => {
+    const spark = c.sparkline_in_7d?.price || [];
+    const canvas = document.getElementById('spark-' + c.id);
+    if (!canvas || !spark.length) return;
+    const pct = c.price_change_percentage_7d_in_currency || 0;
+    const color = pct >= 0 ? '#00d084' : '#ff4d6a';
+    sparkCharts[c.id] = new Chart(canvas, {
+      type: 'line',
+      data: {
+        labels: spark.map((_,i) => i),
+        datasets: [{ data: spark, borderColor: color, borderWidth: 1.5, tension: 0.4, pointRadius: 0, fill: false }]
+      },
+      options: {
+        responsive: false, animation: false,
+        plugins: { legend: { display: false }, tooltip: { enabled: false } },
+        scales: { x: { display: false }, y: { display: false } }
+      }
+    });
+  });
+}
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable();
+}
+
+function filterCoins(q) {
+  searchQuery = q;
+  renderTable();
+}
+
+function updateStats() {
+  // Stats updated via fetchGlobalData
+}
+
+// ===================== CALCULADORAS =====================
+function calcCompuesto() {
+  const P = parseFloat(document.getElementById('ci-capital').value) || 0;
+  const m = parseFloat(document.getElementById('ci-mensual').value) || 0;
+  const r = (parseFloat(document.getElementById('ci-tasa').value) || 0) / 100 / 12;
+  const n = (parseFloat(document.getElementById('ci-años').value) || 0) * 12;
+  if (!n) return;
+  let total = P * Math.pow(1+r, n);
+  if (r > 0) total += m * ((Math.pow(1+r,n)-1)/r);
+  const invertido = P + m*n;
+  const ganancia = total - invertido;
+  document.getElementById('ci-total').textContent = fmt(total).replace('$','$ ');
+  document.getElementById('ci-detail').textContent =
+    `Invertido: ${fmt(invertido)} · Ganancia: ${fmt(ganancia)} (${((ganancia/invertido)*100).toFixed(1)}%)`;
+}
+
+function calcPL() {
+  const inv = parseFloat(document.getElementById('pl-inversion').value) || 0;
+  const pc = parseFloat(document.getElementById('pl-compra').value) || 1;
+  const pv = parseFloat(document.getElementById('pl-venta').value) || 1;
+  const fee = (parseFloat(document.getElementById('pl-fee').value) || 0) / 100;
+  const coins = inv / pc;
+  const bruto = coins * pv;
+  const fees = (inv + bruto) * fee;
+  const neto = bruto - inv - fees;
+  const pct = (neto / inv) * 100;
+  const el = document.getElementById('pl-total');
+  el.textContent = (neto >= 0 ? '+' : '') + fmt(neto).replace('$','$ ');
+  el.style.color = neto >= 0 ? 'var(--green)' : 'var(--red)';
+  document.getElementById('pl-detail').textContent =
+    `Rendimiento: ${pct >= 0 ? '+' : ''}${pct.toFixed(2)}% · Comisiones: ${fmt(fees)} · Cantidad: ${coins.toFixed(6)} monedas`;
+}
+
+let fxRates = { usd:1, clp:940, mxn:17.0, cop:4300, ars:1050, brl:5.75 };
+
+async function fetchFXRates() {
+  try {
+    const res = await fetch('https://api.frankfurter.app/latest?from=USD&to=CLP,MXN,COP,ARS,BRL');
+    if (!res.ok) return;
+    const data = await res.json();
+    const r = data.rates;
+    fxRates = { usd:1, clp:r.CLP, mxn:r.MXN, cop:r.COP, ars:r.ARS, brl:r.BRL };
+    calcConversion();
+  } catch(e) {}
+}
+
+function calcConversion() {
+  const amount = parseFloat(document.getElementById('conv-amount').value) || 0;
+  const from = document.getElementById('conv-from').value;
+  const to = document.getElementById('conv-to').value;
+  const priceMap = { btc: cryptoPrices['bitcoin'] || 67000, eth: cryptoPrices['ethereum'] || 3500, usdt: 1, bnb: cryptoPrices['binancecoin'] || 580, sol: cryptoPrices['solana'] || 160 };
+  const usdValue = amount * (priceMap[from] || 1);
+  const result = usdValue * (fxRates[to] || 1);
+  const symbol = { usd:'USD', clp:'CLP', mxn:'MXN', cop:'COP', ars:'ARS', brl:'BRL' }[to];
+  document.getElementById('conv-result').textContent =
+    result.toLocaleString('es-CL', { maximumFractionDigits: 2 }) + ' ' + symbol;
+}
+
+function calcDCA() {
+  const aporte = parseFloat(document.getElementById('dca-aporte').value) || 0;
+  const freq = parseInt(document.getElementById('dca-freq').value) || 30;
+  const meses = parseFloat(document.getElementById('dca-meses').value) || 0;
+  const rendAnual = (parseFloat(document.getElementById('dca-rend').value) || 0) / 100;
+  const aportesMes = 30 / freq;
+  const rendMensual = Math.pow(1 + rendAnual, 1/12) - 1;
+  let total = 0;
+  for (let i = 0; i < meses; i++) {
+    total = (total + aporte * aportesMes) * (1 + rendMensual);
+  }
+  const invertido = aporte * aportesMes * meses;
+  const ganancia = total - invertido;
+  document.getElementById('dca-total').textContent = fmt(total).replace('$','$ ');
+  document.getElementById('dca-detail').textContent =
+    `Invertido: ${fmt(invertido)} · Ganancia estimada: ${fmt(ganancia)}`;
+}
+
+// ===================== BLOG DATA =====================
+// ===================== FASE 3: CMS + SEO =====================
+// EDITAR ARTÍCULOS: modifica CMS_ARTICLES para agregar/editar contenido
+// sin tocar el resto del código.
+const CMS_ARTICLES = [
+  {
+    id:'que-es-bitcoin', cat:'Guía básica', featured:true,
+    title:'¿Qué es Bitcoin y cómo funciona?',
+    excerpt:'Todo lo que necesitas saber sobre la primera criptomoneda, en lenguaje simple.',
+    emoji:'₿', bg:'#f7931a22', time:'8 min', date:'12 ene 2025', author:'Equipo Criptum21',
+    tags:['Bitcoin','Principiantes','Blockchain'],
+    content:`<p>Bitcoin (BTC) es la primera criptomoneda del mundo, creada en 2009 por <strong>Satoshi Nakamoto</strong>. Es dinero digital descentralizado que permite pagos sin bancos.</p>
+      <h2>¿Cómo funciona?</h2>
+      <p>Funciona sobre una tecnología llamada <strong>blockchain</strong> — un libro contable público replicado en miles de computadoras en todo el mundo que nadie controla individualmente.</p>
+      <div class="highlight">💡 Solo existirán 21 millones de Bitcoin. Esta escasez programada es lo que le da valor como "oro digital".</div>
+      <h2>¿Por qué tiene valor?</h2>
+      <ul><li><strong>Escasez:</strong> límite absoluto de 21M BTC.</li><li><strong>Descentralización:</strong> ningún gobierno lo controla.</li><li><strong>Seguridad:</strong> la red nunca ha sido hackeada en 15+ años.</li><li><strong>Adopción:</strong> más de 100M de personas lo usan.</li></ul>
+      <h2>¿Cómo comprar desde LATAM?</h2>
+      <p>La forma más sencilla es un exchange. En LATAM: Binance, Buda.com (Chile, Colombia, Perú) y Bitso (México). Puedes comprar desde $10 USD.</p>
+      <div class="warning">⚠️ Bitcoin puede subir 100% o bajar 80% en meses. Nunca inviertas más de lo que puedes perder.</div>`
+  },
+  {
+    id:'como-comprar-cripto', cat:'Inversión', featured:false,
+    title:'Cómo comprar tu primera cripto desde LATAM sin errores',
+    excerpt:'Guía paso a paso para comprar Bitcoin o Ethereum desde Chile, México y Colombia.',
+    emoji:'🛒', bg:'#00d08422', time:'12 min', date:'8 ene 2025', author:'Equipo Criptum21',
+    tags:['Inversión','Principiantes','Chile','México','Colombia'],
+    content:`<p>Comprar cripto puede parecer complicado, pero con la guía correcta es simple. Aquí el proceso completo.</p>
+      <h2>Paso 1: Elige el exchange correcto</h2>
+      <ul><li><strong>Chile:</strong> Buda.com, Orionx, Binance P2P</li><li><strong>México:</strong> Bitso, Binance, Volabit</li><li><strong>Colombia:</strong> Buda.com, Binance P2P</li><li><strong>Argentina:</strong> Lemon Cash, Binance, Ripio</li></ul>
+      <h2>Paso 2: Verifica tu identidad (KYC)</h2>
+      <p>Todos los exchanges regulados piden verificación. Necesitarás cédula o pasaporte y un selfie.</p>
+      <div class="highlight">💡 La verificación es obligatoria en plataformas serias. Protege tu cuenta y cumple regulaciones anti-lavado.</div>
+      <h2>Paso 3: Deposita dinero</h2>
+      <p>Según el país: transferencia bancaria, tarjeta débito o efectivo (OXXO en México, Servipag en Chile).</p>
+      <h2>Paso 4: Compra</h2>
+      <p>Para principiantes recomendamos Bitcoin (BTC) o Ethereum (ETH). Son los más líquidos y establecidos.</p>
+      <div class="warning">⚠️ Evita criptomonedas desconocidas al principio. La mayoría de altcoins poco conocidas pierden valor.</div>
+      <h2>Paso 5: Seguridad</h2>
+      <p>Si guardas montos grandes, considera una hardware wallet (Ledger, Trezor) para no depender del exchange.</p>`
+  },
+  {
+    id:'estrategia-dca', cat:'Estrategia', featured:false,
+    title:'DCA: La estrategia más simple para invertir en cripto',
+    excerpt:'El Dollar Cost Averaging reduce el riesgo de la volatilidad. Aprende cómo aplicarlo.',
+    emoji:'📅', bg:'#7c5cfc22', time:'6 min', date:'4 ene 2025', author:'Equipo Criptum21',
+    tags:['DCA','Estrategia','Inversión pasiva'],
+    content:`<p>El <strong>Dollar Cost Averaging (DCA)</strong> es comprar una cantidad fija de cripto en intervalos regulares sin importar el precio. Es la estrategia más recomendada para principiantes.</p>
+      <h2>¿Por qué funciona?</h2>
+      <p>Elimina el problema del "market timing". En meses de precio bajo compras más monedas; en meses de precio alto compras menos. El promedio suele ser favorable a largo plazo.</p>
+      <div class="highlight">💡 Ejemplo: $50 USD mensuales en BTC durante 2 años. No necesitas predecir el mercado — solo ser constante.</div>
+      <h2>Cómo aplicarlo en LATAM</h2>
+      <ul><li><strong>Binance:</strong> función de compra recurrente automática disponible.</li><li><strong>Bitso:</strong> compras periódicas programables en México.</li><li><strong>Manual:</strong> alarma mensual y compra manual — igual de efectivo.</li></ul>
+      <div class="warning">⚠️ El DCA no garantiza ganancias. Solo reduce el riesgo del timing. A largo plazo Bitcoin ha subido, pero no hay garantías de que continúe.</div>`
+  },
+  {
+    id:'seguridad-cripto', cat:'Seguridad', featured:false,
+    title:'Cómo proteger tus criptomonedas de hackers',
+    excerpt:'Wallets, 2FA, seed phrases y las mejores prácticas de seguridad para tus activos digitales.',
+    emoji:'🔒', bg:'#ff4d6a22', time:'10 min', date:'1 ene 2025', author:'Equipo Criptum21',
+    tags:['Seguridad','Wallets','Hardware wallet'],
+    content:`<p>En cripto, tú eres tu propio banco. Eso significa que también eres el único responsable de la seguridad. Cada año se pierden miles de millones por errores evitables.</p>
+      <h2>"Not your keys, not your coins"</h2>
+      <p>Si tus cripto están en un exchange, técnicamente son del exchange. Si quiebra (como FTX en 2022) o es hackeado, puedes perder todo.</p>
+      <h2>Tipos de wallets</h2>
+      <ul><li><strong>Exchange wallet:</strong> conveniente pero riesgosa para montos grandes.</li><li><strong>Software wallet (MetaMask, Trust Wallet):</strong> más control, vulnerable si tu dispositivo es comprometido.</li><li><strong>Hardware wallet (Ledger, Trezor):</strong> la opción más segura. Tus claves nunca tocan internet.</li></ul>
+      <div class="highlight">💡 Regla práctica: exchange para trading activo, hardware wallet para ahorro de largo plazo.</div>
+      <h2>Tu seed phrase es tu vida</h2>
+      <p>Guarda tus 12-24 palabras en papel físico, en lugar seguro. Sin foto digital, sin iCloud, sin email. Si alguien las obtiene, tiene acceso total a tus fondos para siempre.</p>
+      <h2>2FA siempre activo</h2>
+      <p>Usa Google Authenticator o Authy, nunca SMS. El SIM swapping es un ataque común que compromete el 2FA por SMS.</p>
+      <div class="warning">⚠️ Nadie del soporte técnico jamás te pedirá tu seed phrase. Siempre es una estafa.</div>`
+  },
+  {
+    id:'que-es-staking', cat:'DeFi', featured:false,
+    title:'Staking: cómo generar ingresos pasivos con criptomonedas',
+    excerpt:'Aprende a hacer crecer tu portafolio cripto poniendo tus monedas a trabajar sin venderlas.',
+    emoji:'⚡', bg:'#ffb83022', time:'7 min', date:'28 dic 2024', author:'Equipo Criptum21',
+    tags:['Staking','DeFi','Ingresos pasivos'],
+    content:`<p>El <strong>staking</strong> es bloquear tus criptomonedas en una red blockchain para ayudar a validar transacciones y recibir recompensas. Similar a un plazo fijo, pero con cripto.</p>
+      <h2>Rendimientos típicos (APY 2025)</h2>
+      <ul><li><strong>Ethereum (ETH):</strong> 3–5% anual</li><li><strong>Solana (SOL):</strong> 6–8% anual</li><li><strong>Cardano (ADA):</strong> 3–5% anual</li><li><strong>Polkadot (DOT):</strong> 10–14% anual</li></ul>
+      <div class="highlight">💡 Los rendimientos se pagan en la misma moneda. Haces staking de ETH, recibes más ETH — cuyo precio puede subir o bajar.</div>
+      <h2>Cómo hacer staking desde LATAM</h2>
+      <ul><li><strong>Binance:</strong> staking flexible y bloqueado para muchas monedas.</li><li><strong>Lido Finance:</strong> staking líquido de ETH (recibes stETH).</li><li><strong>Bitso:</strong> staking disponible para usuarios de México.</li></ul>
+      <div class="warning">⚠️ Rendimientos superiores al 20% anual son señal de alerta. Empieza con plataformas establecidas y auditadas.</div>`
+  },
+  {
+    id:'bitcoin-vs-ethereum', cat:'Análisis', featured:false,
+    title:'Bitcoin vs Ethereum: ¿Cuál conviene en 2025?',
+    excerpt:'Comparativa completa de los dos activos más importantes del mercado cripto.',
+    emoji:'⚖️', bg:'#00a86b22', time:'15 min', date:'25 dic 2024', author:'Equipo Criptum21',
+    tags:['Bitcoin','Ethereum','Análisis','Comparativa'],
+    content:`<p>Bitcoin y Ethereum son complementarias pero con propósitos distintos y perfiles de riesgo diferentes.</p>
+      <h2>Bitcoin: el oro digital</h2>
+      <p>Propuesta simple: escasez programada (21M BTC máximo) y resistencia a la censura. Es la reserva de valor del ecosistema cripto.</p>
+      <ul><li>La mayor capitalización y liquidez del mercado</li><li>ETFs de Bitcoin ya aprobados en EE.UU.</li><li>Menor riesgo relativo dentro de cripto</li></ul>
+      <h2>Ethereum: la computadora mundial</h2>
+      <p>Plataforma programable para contratos inteligentes. Todo el DeFi, NFTs y Web3 principal corre sobre Ethereum.</p>
+      <ul><li>Mayor potencial de crecimiento (y mayor riesgo)</li><li>Genera rendimientos vía staking (~4% APY)</li><li>Base del ecosistema DeFi más grande del mundo</li></ul>
+      <div class="highlight">💡 Estrategia común para principiantes: 60-70% BTC, 20-30% ETH, resto en altcoins seleccionadas.</div>
+      <p>Históricamente ETH supera a BTC en porcentaje en mercados alcistas, pero cae más en bajistas. BTC es el activo más "estable" dentro de un universo volátil.</p>
+      <div class="warning">⚠️ Rendimiento pasado no garantiza rendimiento futuro. Cualquier análisis de precio es especulativo.</div>`
+  },
+  {
+    id:'impuestos-cripto-latam', cat:'Legal', featured:false,
+    title:'Impuestos sobre criptomonedas en Chile, México y Colombia',
+    excerpt:'Guía práctica sobre cómo declarar tus ganancias cripto y evitar problemas con el fisco.',
+    emoji:'📋', bg:'#4a90d922', time:'11 min', date:'20 dic 2024', author:'Equipo Criptum21',
+    tags:['Impuestos','Legal','Chile','México','Colombia'],
+    content:`<p>La tributación cripto en LATAM está en desarrollo, pero ignorarla puede traer problemas. Cada país tiene su enfoque.</p>
+      <h2>Chile</h2>
+      <p>El SII indica que las ganancias por venta de cripto son rentas del capital y deben declararse. La tasa depende de si eres persona natural o empresa.</p>
+      <h2>México</h2>
+      <p>El SAT considera las criptomonedas activos virtuales. Las ganancias se declaran como "demás ingresos" en la declaración anual. Las pérdidas pueden deducirse.</p>
+      <h2>Colombia</h2>
+      <p>La DIAN las trata como activos. Deben incluirse en la declaración de patrimonio. Las ganancias ocasionales tienen tasa del 10%.</p>
+      <div class="highlight">💡 Lleva un registro de todas tus compras, ventas y fechas. Herramientas como Koinly generan reportes tributarios automáticamente.</div>
+      <div class="warning">⚠️ Este artículo es informativo, no asesoramiento tributario. Consulta a un contador especializado en tu país.</div>`
+  },
+  {
+    id:'defi-principiantes', cat:'DeFi', featured:false,
+    title:'DeFi para principiantes: qué es y cómo empezar',
+    excerpt:'Finanzas descentralizadas en lenguaje simple: préstamos, liquidez y yield farming explicados.',
+    emoji:'🌐', bg:'#9b59b622', time:'14 min', date:'15 dic 2024', author:'Equipo Criptum21',
+    tags:['DeFi','Web3','Yield farming'],
+    content:`<p><strong>DeFi (Finanzas Descentralizadas)</strong> es un ecosistema de aplicaciones financieras sobre blockchains que funcionan sin bancos.</p>
+      <h2>Conceptos principales</h2>
+      <ul><li><strong>DEX:</strong> exchanges como Uniswap donde intercambias tokens directamente desde tu wallet.</li><li><strong>Lending/Borrowing:</strong> protocolos como Aave donde prestas cripto y ganas intereses, o pides prestado usando tu cripto como garantía.</li><li><strong>Liquidity pools:</strong> aportas dos tokens a un pool y ganas comisiones de las transacciones.</li></ul>
+      <h2>Riesgos únicos de DeFi</h2>
+      <ul><li><strong>Smart contract bugs:</strong> el código puede tener errores que hackers explotan.</li><li><strong>Impermanent loss:</strong> puedes perder valor al proveer liquidez si los precios cambian mucho.</li><li><strong>Rug pulls:</strong> los desarrolladores pueden abandonar el proyecto con los fondos.</li></ul>
+      <div class="highlight">💡 Empieza con protocolos auditados: Uniswap, Aave, Compound, Curve. Evita proyectos nuevos sin historial.</div>
+      <div class="warning">⚠️ DeFi NO es para principiantes absolutos. Domina primero los exchanges centralizados.</div>`
+  },
+];
+
+const CMS_EXCHANGES = [
+  { name:'Binance', sub:'Exchange global', logo:'B', bg:'#f0b90b', countries:'Chile, MX, CO, PE, AR, BR', maker:'0.10%', taker:'0.10%', coins:'350+', kyc:true, p2p:true, staking:true, rating:4.8, url:'https://accounts.binance.com/register?ref=TUREFID' },
+  { name:'Buda.com', sub:'Exchange LATAM', logo:'B', bg:'#00a86b', countries:'Chile, Colombia, Perú', maker:'0.80%', taker:'0.80%', coins:'10+', kyc:true, p2p:false, staking:false, rating:4.2, url:'https://buda.com' },
+  { name:'Bitso', sub:'Líder en México', logo:'B', bg:'#6851ff', countries:'México, Argentina, Brasil', maker:'0.50%', taker:'0.65%', coins:'40+', kyc:true, p2p:false, staking:true, rating:4.4, url:'https://bitso.com' },
+  { name:'Coinbase', sub:'El más regulado', logo:'C', bg:'#0052ff', countries:'LATAM (limitado)', maker:'0.40%', taker:'0.60%', coins:'250+', kyc:true, p2p:false, staking:true, rating:4.3, url:'https://coinbase.com' },
+  { name:'Kraken', sub:'Seguridad premium', logo:'K', bg:'#5741d9', countries:'LATAM (limitado)', maker:'0.16%', taker:'0.26%', coins:'200+', kyc:true, p2p:false, staking:true, rating:4.5, url:'https://kraken.com' },
+  { name:'OKX', sub:'Alto volumen', logo:'O', bg:'#333', countries:'Chile, MX, CO', maker:'0.08%', taker:'0.10%', coins:'300+', kyc:true, p2p:true, staking:true, rating:4.3, url:'https://okx.com' },
+];
+
+let blogFilter = 'Todos';
+let blogPage = 1;
+const BLOG_PER_PAGE = 6;
+
+function getCategories() {
+  return ['Todos', ...new Set(CMS_ARTICLES.map(a => a.cat))];
+}
+
+function getFilteredArticles() {
+  return blogFilter === 'Todos' ? CMS_ARTICLES : CMS_ARTICLES.filter(a => a.cat === blogFilter);
+}
+
+function renderBlog() {
+  document.getElementById('blog-filters').innerHTML = getCategories().map(c =>
+    `<button class="blog-filter ${c === blogFilter ? 'active' : ''}" onclick="setBlogFilter('${c}')">${c}</button>`
+  ).join('');
+  const filtered = getFilteredArticles();
+  const page = filtered.slice(0, blogPage * BLOG_PER_PAGE);
+  document.getElementById('blog-grid').innerHTML = page.map((a, i) => {
+    const isFeatured = a.featured && blogFilter === 'Todos' && i === 0;
+    if (isFeatured) return `<div class="blog-card-featured" onclick="openArticle(${CMS_ARTICLES.indexOf(a)})">
+        <div class="blog-img-lg" style="background:${a.bg};">${a.emoji}</div>
+        <div class="blog-body" style="padding:2rem;">
+          <div class="blog-cat">${a.cat}</div>
+          <div class="blog-title" style="font-size:1.3rem;margin-bottom:.75rem;">${a.title}</div>
+          <div class="blog-excerpt">${a.excerpt}</div>
+          <div style="margin-top:.75rem;">${a.tags.map(t => `<span class="blog-tag">${t}</span>`).join('')}</div>
+          <div class="blog-meta" style="margin-top:1rem;">
+            <span><i class="fas fa-clock"></i> ${a.time}</span>
+            <span><i class="fas fa-calendar"></i> ${a.date}</span>
+            <span><i class="fas fa-user"></i> ${a.author}</span>
+          </div>
+          <span class="blog-read-more">Leer artículo <i class="fas fa-arrow-right"></i></span>
+        </div></div>`;
+    return `<div class="blog-card" onclick="openArticle(${CMS_ARTICLES.indexOf(a)})">
+      <div class="blog-img" style="background:${a.bg};">${a.emoji}</div>
+      <div class="blog-body">
+        <div class="blog-cat">${a.cat}</div>
+        <div class="blog-title">${a.title}</div>
+        <div class="blog-excerpt">${a.excerpt}</div>
+        <div class="blog-meta">
+          <span><i class="fas fa-clock"></i> ${a.time}</span>
+          <span><i class="fas fa-calendar"></i> ${a.date}</span>
+        </div>
+      </div></div>`;
+  }).join('');
+  const lm = document.getElementById('blog-load-more');
+  if (lm) lm.style.display = page.length < filtered.length ? 'block' : 'none';
+}
+
+function setBlogFilter(cat) { blogFilter = cat; blogPage = 1; renderBlog(); }
+function loadMoreArticles() { blogPage++; renderBlog(); }
+
+function openArticle(idx) {
+  const a = CMS_ARTICLES[idx];
+  if (!a) return;
+  document.getElementById('art-cat').textContent = a.cat;
+  document.getElementById('art-title').textContent = a.title;
+  document.getElementById('art-meta').innerHTML = `
+    <span><i class="fas fa-clock"></i> ${a.time} de lectura</span>
+    <span><i class="fas fa-calendar"></i> ${a.date}</span>
+    <span><i class="fas fa-user"></i> ${a.author}</span>`;
+  document.getElementById('art-body').innerHTML = a.content;
+  document.getElementById('art-footer').innerHTML = `
+    <div class="article-cta">
+      <div><div style="font-size:13px;color:var(--text3);margin-bottom:8px;">Etiquetas</div>
+        <div class="article-tags">${a.tags.map(t => `<span class="blog-tag">${t}</span>`).join('')}</div></div>
+      <a href="#exchanges" onclick="closeArticle()" class="btn-primary" style="white-space:nowrap;">
+        <i class="fas fa-rocket"></i> Comenzar a invertir</a>
+    </div>`;
+  document.title = a.title + ' — Criptum21';
+  const ov = document.getElementById('article-overlay');
+  ov.classList.add('open');
+  ov.scrollTop = 0;
+}
+
+function closeArticle() {
+  document.getElementById('article-overlay').classList.remove('open');
+  document.title = 'Criptum21 — Finanzas e inversiones para Latinoamérica';
+}
+document.getElementById('article-overlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeArticle();
+});
+
+function renderCompare() {
+  document.getElementById('compare-body').innerHTML = CMS_EXCHANGES.map(e => `
+    <tr>
+      <td><div class="compare-exchange">
+        <div class="compare-logo" style="background:${e.bg};">${e.logo}</div>
+        <div><div class="compare-name">${e.name}</div><div class="compare-sub">${e.sub}</div></div>
+      </div></td>
+      <td style="font-size:12px;color:var(--text2);">${e.countries}</td>
+      <td style="font-family:var(--font-head);font-size:13px;">${e.maker}</td>
+      <td style="font-family:var(--font-head);font-size:13px;">${e.taker}</td>
+      <td style="font-weight:500;">${e.coins}</td>
+      <td><i class="fas fa-check check"></i></td>
+      <td>${e.p2p ? '<i class="fas fa-check check"></i>' : '<i class="fas fa-times cross"></i>'}</td>
+      <td>${e.staking ? '<i class="fas fa-check check"></i>' : '<i class="fas fa-times cross"></i>'}</td>
+      <td><span style="color:var(--amber);font-size:13px;font-weight:700;">${e.rating.toFixed(1)}</span> <span style="font-size:11px;color:var(--text3);">/5</span></td>
+      <td><a href="${e.url}" target="_blank" rel="noopener sponsored" class="btn-buy">Ir al sitio</a></td>
+    </tr>`).join('');
+}
+
+function injectSEO() {
+  const schema = {"@context":"https://schema.org","@type":"WebSite","name":"Criptum21","description":"Plataforma de finanzas personales y criptomonedas para Latinoamérica","url":"https://criptum21.netlify.app","inLanguage":"es-419","publisher":{"@type":"Organization","name":"Criptum21"}};
+  const el = document.createElement('script');
+  el.type = 'application/ld+json';
+  el.textContent = JSON.stringify(schema);
+  document.head.appendChild(el);
+}
+injectSEO();
+renderCompare();
+
+// ===================== NEWSLETTER =====================
+function handleNewsletterSubmit(e) {
+  e.preventDefault();
+  const form = e.target;
+  const email = document.getElementById('nl-email').value;
+  const btn = form.querySelector('button[type="submit"]');
+  btn.disabled = true;
+  btn.textContent = 'Enviando…';
+
+  fetch('/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams(new FormData(form)).toString()
+  })
+  .then(() => {
+    showToast('✉️', '¡Suscrito con éxito!', 'Recibirás el próximo resumen semanal en ' + email);
+    form.reset();
+  })
+  .catch(() => {
+    showToast('⚠️', 'Error al suscribir', 'Intenta de nuevo en un momento.');
+  })
+  .finally(() => {
+    btn.disabled = false;
+    btn.textContent = 'Suscribirse';
+  });
+}
+
+
+// ===================== FASE 2: PORTAFOLIO =====================
+let portfolio = JSON.parse(localStorage.getItem('cs_portfolio') || '[]');
+let watchlist = JSON.parse(localStorage.getItem('cs_watchlist') || '[]');
+let detailChart = null;
+let currentDetailCoin = null;
+
+// ---- COIN SELECTOR ----
+function populateCoinSelects() {
+  const opts = allCoins.map(c =>
+    `<option value="${c.id}" data-price="${c.current_price}">${c.name} (${c.symbol.toUpperCase()})</option>`
+  ).join('');
+  const addEl = document.getElementById('add-coin');
+  const watchEl = document.getElementById('watch-coin');
+  if (addEl) addEl.innerHTML = opts;
+  if (watchEl) watchEl.innerHTML = opts;
+}
+
+// ---- ADD MODAL ----
+function openAddModal() {
+  populateCoinSelects();
+  const sel = document.getElementById('add-coin');
+  if (sel && allCoins.length) {
+    const price = allCoins.find(c => c.id === sel.value)?.current_price || '';
+    document.getElementById('add-price').value = price ? price.toFixed(2) : '';
+  }
+  document.getElementById('add-date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('add-modal').classList.add('open');
+}
+function closeAddModal() { document.getElementById('add-modal').classList.remove('open'); }
+
+function onAddCoinChange() {
+  const sel = document.getElementById('add-coin');
+  const coin = allCoins.find(c => c.id === sel.value);
+  if (coin) document.getElementById('add-price').value = coin.current_price.toFixed(2);
+}
+
+function savePosition() {
+  const coinId = document.getElementById('add-coin').value;
+  const qty = parseFloat(document.getElementById('add-qty').value);
+  const buyPrice = parseFloat(document.getElementById('add-price').value);
+  const date = document.getElementById('add-date').value;
+  if (!coinId || !qty || !buyPrice) { showToast('⚠️', 'Campos incompletos', 'Completa moneda, cantidad y precio de compra.'); return; }
+  const coin = allCoins.find(c => c.id === coinId);
+  portfolio.push({ id: coinId, name: coin?.name || coinId, symbol: coin?.symbol?.toUpperCase() || coinId, qty, buyPrice, date });
+  localStorage.setItem('cs_portfolio', JSON.stringify(portfolio));
+  closeAddModal();
+  renderPortfolio();
+  document.getElementById('add-qty').value = '';
+}
+
+// ---- RENDER PORTFOLIO ----
+function renderPortfolio() {
+  const body = document.getElementById('portfolio-body');
+  if (!portfolio.length) {
+    body.innerHTML = `<div class="empty-state"><i class="fas fa-chart-pie"></i><p>Aún no tienes posiciones registradas.<br>Agrega tu primera inversión para empezar.</p><button class="btn-add" onclick="openAddModal()" style="margin:0 auto;"><i class="fas fa-plus"></i> Agregar posición</button></div>`;
+    updatePortfolioStats([]);
+    document.getElementById('rebalance-section').style.display = 'none';
+    return;
+  }
+  let totalValue = 0, totalCost = 0;
+  const rows = portfolio.map((pos, i) => {
+    const coin = allCoins.find(c => c.id === pos.id);
+    const currentPrice = coin?.current_price || pos.buyPrice;
+    const value = pos.qty * currentPrice;
+    const cost = pos.qty * pos.buyPrice;
+    const pnl = value - cost;
+    const pnlPct = ((pnl / cost) * 100);
+    totalValue += value; totalCost += cost;
+    const emoji = coinEmoji[pos.id] || pos.symbol?.charAt(0) || '?';
+    const bgColor = coinColor[pos.id] || '#5c5c78';
+    const pnlClass = pnl >= 0 ? 'up' : 'down';
+    return `<tr>
+      <td><div class="coin-cell">
+        <div class="coin-icon" style="background:${bgColor}22;color:${bgColor};">${emoji}</div>
+        <div><div class="coin-name">${pos.name}</div><div class="coin-symbol">${pos.symbol}</div></div>
+      </div></td>
+      <td class="num">${pos.qty.toLocaleString('en-US', {maximumFractionDigits:6})}</td>
+      <td class="num">${fmtPrice(pos.buyPrice)}</td>
+      <td class="num">${fmtPrice(currentPrice)}</td>
+      <td class="num">${fmt(value)}</td>
+      <td class="num"><span class="pill ${pnlClass}">${pnl >= 0 ? '+' : ''}${fmt(Math.abs(pnl)).replace('$','')} (${pnlPct >= 0 ? '+' : ''}${pnlPct.toFixed(2)}%)</span></td>
+      <td class="num" style="font-size:12px;color:var(--text3);">${pos.date || '—'}</td>
+      <td>
+        <button onclick="openDetail('${pos.id}')" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text2);padding:4px 10px;border-radius:6px;font-size:12px;cursor:pointer;margin-right:4px;" title="Ver detalle"><i class="fas fa-chart-area"></i></button>
+        <button onclick="removePosition(${i})" style="background:none;border:none;color:var(--text3);padding:4px 8px;border-radius:6px;font-size:12px;cursor:pointer;transition:color .2s;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text3)'" title="Eliminar"><i class="fas fa-trash"></i></button>
+      </td>
+    </tr>`;
+  });
+
+  const allocationColors = ['#7c5cfc','#00d084','#ff4d6a','#ffb830','#00a8ff','#ff6b9d','#a8ff3e','#ff9f43'];
+  const allocRows = portfolio.map((pos, i) => {
+    const coin = allCoins.find(c => c.id === pos.id);
+    const value = pos.qty * (coin?.current_price || pos.buyPrice);
+    const pct = totalValue > 0 ? (value / totalValue * 100) : 0;
+    const color = allocationColors[i % allocationColors.length];
+    return `<div style="margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;">
+        <span>${pos.name}</span>
+        <span style="font-weight:500;">${pct.toFixed(1)}%</span>
+      </div>
+      <div class="alloc-bar-wrap"><div class="alloc-bar" style="width:${pct}%;background:${color};"></div></div>
+    </div>`;
+  }).join('');
+
+  body.innerHTML = `
+    <div style="overflow-x:auto;">
+      <table>
+        <thead><tr>
+          <th>Moneda</th><th class="num">Cantidad</th><th class="num">Precio compra</th>
+          <th class="num">Precio actual</th><th class="num">Valor</th><th class="num">P&L</th>
+          <th class="num">Fecha</th><th>Acción</th>
+        </tr></thead>
+        <tbody>${rows.join('')}</tbody>
+      </table>
+    </div>
+    <div style="padding:1.5rem;border-top:1px solid var(--border);">
+      <div style="font-size:12px;color:var(--text3);margin-bottom:1rem;font-weight:500;">DISTRIBUCIÓN DEL PORTAFOLIO</div>
+      ${allocRows}
+    </div>`;
+
+  updatePortfolioStats(portfolio.map((pos, i) => {
+    const coin = allCoins.find(c => c.id === pos.id);
+    return { ...pos, currentPrice: coin?.current_price || pos.buyPrice };
+  }));
+  renderRebalance();
+  document.getElementById('rebalance-section').style.display = portfolio.length >= 2 ? 'block' : 'none';
+}
+
+function removePosition(i) {
+  const pos = portfolio[i];
+  if (!pos) return;
+  const toastId = 'confirm-' + Date.now();
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className = 'toast'; el.id = toastId;
+  el.innerHTML = `<span class="toast-icon">🗑️</span>
+    <div style="flex:1;">
+      <div class="toast-title">¿Eliminar ${pos.name}?</div>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button onclick="confirmRemove(${i},'${toastId}')" style="background:var(--red);color:#fff;border:none;padding:5px 14px;border-radius:6px;font-size:12px;cursor:pointer;font-family:var(--font-body);">Eliminar</button>
+        <button onclick="removeToast('${toastId}')" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text);padding:5px 14px;border-radius:6px;font-size:12px;cursor:pointer;font-family:var(--font-body);">Cancelar</button>
+      </div>
+    </div>`;
+  wrap.appendChild(el);
+  setTimeout(() => removeToast(toastId), 8000);
+}
+
+function exportPortfolioCSV() {
+  if (!portfolio.length) { showToast('ℹ️', 'Portafolio vacío', 'Agrega posiciones antes de exportar.'); return; }
+  const headers = ['Moneda','Símbolo','Cantidad','Precio compra (USD)','Precio actual (USD)','Valor (USD)','P&L (USD)','P&L (%)','Fecha'];
+  const rows = portfolio.map(pos => {
+    const coin = allCoins.find(c => c.id === pos.id);
+    const current = coin?.current_price || pos.buyPrice;
+    const value = pos.qty * current;
+    const cost = pos.qty * pos.buyPrice;
+    const pnl = value - cost;
+    const pnlPct = ((pnl / cost) * 100).toFixed(2);
+    return [pos.name, pos.symbol, pos.qty, pos.buyPrice, current.toFixed(2), value.toFixed(2), pnl.toFixed(2), pnlPct, pos.date || ''].join(',');
+  });
+  const csv = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'portafolio-criptum21.csv';
+  a.click(); URL.revokeObjectURL(url);
+  showToast('📥', 'CSV exportado', 'El archivo fue descargado correctamente.');
+}
+
+function confirmRemove(i, toastId) {
+  removeToast(toastId);
+  portfolio.splice(i, 1);
+  localStorage.setItem('cs_portfolio', JSON.stringify(portfolio));
+  renderPortfolio();
+  showToast('✅', 'Posición eliminada', 'La posición fue removida del portafolio.');
+}
+
+function updatePortfolioStats(positions) {
+  let totalValue = 0, totalCost = 0, best = null, bestPct = -Infinity;
+  positions.forEach(pos => {
+    const v = pos.qty * pos.currentPrice;
+    const c = pos.qty * pos.buyPrice;
+    const pct = ((v - c) / c) * 100;
+    totalValue += v; totalCost += c;
+    if (pct > bestPct) { bestPct = pct; best = pos; }
+  });
+  const pnl = totalValue - totalCost;
+  const pnlPct = totalCost > 0 ? (pnl / totalCost * 100) : 0;
+  document.getElementById('pf-total').textContent = fmt(totalValue);
+  document.getElementById('pf-total-change').textContent = positions.length ? `Invertido: ${fmt(totalCost)}` : '—';
+  const pnlEl = document.getElementById('pf-pnl');
+  pnlEl.textContent = (pnl >= 0 ? '+' : '') + fmt(Math.abs(pnl));
+  pnlEl.style.color = pnl >= 0 ? 'var(--green)' : 'var(--red)';
+  const pnlPctEl = document.getElementById('pf-pnl-pct');
+  pnlPctEl.textContent = (pnlPct >= 0 ? '+' : '') + pnlPct.toFixed(2) + '%';
+  pnlPctEl.style.color = pnlPct >= 0 ? 'var(--green)' : 'var(--red)';
+  document.getElementById('pf-best').textContent = best ? best.symbol : '—';
+  document.getElementById('pf-best-pct').textContent = best ? (bestPct >= 0 ? '+' : '') + bestPct.toFixed(2) + '%' : '—';
+  document.getElementById('pf-count').textContent = positions.length;
+}
+
+// ---- REBALANCEO ----
+let rebalanceTargets = {};
+function renderRebalance() {
+  if (portfolio.length < 2) return;
+  const equal = Math.floor(100 / portfolio.length);
+  const sliders = portfolio.map((pos, i) => {
+    if (rebalanceTargets[pos.id] === undefined) rebalanceTargets[pos.id] = equal;
+    return `<div class="rebalance-row">
+      <span class="rebalance-label">${pos.symbol}</span>
+      <input type="range" class="rebalance-slider" min="0" max="100" step="1"
+        value="${rebalanceTargets[pos.id]}"
+        oninput="updateRebalance('${pos.id}', this.value)" />
+      <span class="rebalance-pct" id="rb-${pos.id}">${rebalanceTargets[pos.id]}%</span>
+    </div>`;
+  }).join('');
+  document.getElementById('rebalance-sliders').innerHTML = sliders;
+  updateRebalanceTotal();
+}
+
+function updateRebalance(id, val) {
+  rebalanceTargets[id] = parseInt(val);
+  document.getElementById('rb-' + id).textContent = val + '%';
+  updateRebalanceTotal();
+}
+
+function updateRebalanceTotal() {
+  const total = Object.values(rebalanceTargets).reduce((a, b) => a + b, 0);
+  const el = document.getElementById('rebalance-total');
+  el.textContent = 'Total: ' + total + '%';
+  el.className = 'rebalance-total ' + (total === 100 ? 'ok' : 'err');
+  const actEl = document.getElementById('rebalance-actions');
+  if (total !== 100) { actEl.style.display = 'none'; return; }
+  actEl.style.display = 'block';
+  let totalValue = 0;
+  portfolio.forEach(pos => {
+    const coin = allCoins.find(c => c.id === pos.id);
+    totalValue += pos.qty * (coin?.current_price || pos.buyPrice);
+  });
+  const suggestions = portfolio.map(pos => {
+    const coin = allCoins.find(c => c.id === pos.id);
+    const currentPrice = coin?.current_price || pos.buyPrice;
+    const currentValue = pos.qty * currentPrice;
+    const targetValue = totalValue * (rebalanceTargets[pos.id] / 100);
+    const diff = targetValue - currentValue;
+    const diffQty = Math.abs(diff / currentPrice);
+    const action = diff > 0 ? 'Comprar' : 'Vender';
+    const color = diff > 0 ? 'var(--green)' : 'var(--red)';
+    if (Math.abs(diff) < 1) return `<div style="font-size:13px;padding:6px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;"><span>${pos.symbol}</span><span style="color:var(--text3);">Sin cambios</span></div>`;
+    return `<div style="font-size:13px;padding:6px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;">
+      <span>${pos.symbol}</span>
+      <span style="color:${color};font-weight:500;">${action} ${diffQty.toFixed(6)} (${fmt(Math.abs(diff))})</span>
+    </div>`;
+  }).join('');
+  document.getElementById('rebalance-suggestions').innerHTML = suggestions;
+}
+
+// ---- WATCHLIST ----
+function openWatchModal() {
+  populateCoinSelects();
+  document.getElementById('watch-modal').classList.add('open');
+}
+function closeWatchModal() { document.getElementById('watch-modal').classList.remove('open'); }
+
+function saveWatch() {
+  const coinId = document.getElementById('watch-coin').value;
+  const high = parseFloat(document.getElementById('watch-high').value) || null;
+  const low = parseFloat(document.getElementById('watch-low').value) || null;
+  if (!coinId) return;
+  if (watchlist.find(w => w.id === coinId)) { showToast('ℹ️', 'Ya en watchlist', 'Esta moneda ya está siendo monitoreada.'); return; }
+  const coin = allCoins.find(c => c.id === coinId);
+  watchlist.push({ id: coinId, name: coin?.name || coinId, symbol: coin?.symbol?.toUpperCase() || coinId, high, low });
+  localStorage.setItem('cs_watchlist', JSON.stringify(watchlist));
+  closeWatchModal();
+  document.getElementById('watch-high').value = '';
+  document.getElementById('watch-low').value = '';
+  renderWatchlist();
+}
+
+function removeWatch(id) {
+  watchlist = watchlist.filter(w => w.id !== id);
+  localStorage.setItem('cs_watchlist', JSON.stringify(watchlist));
+  renderWatchlist();
+}
+
+function renderWatchlist() {
+  const grid = document.getElementById('watchlist-grid');
+  if (!watchlist.length) {
+    grid.innerHTML = '<div style="color:var(--text3);font-size:13px;padding:1rem 0;">Agrega monedas para hacer seguimiento con alertas de precio.</div>';
+    return;
+  }
+  grid.innerHTML = watchlist.map(w => {
+    const coin = allCoins.find(c => c.id === w.id);
+    const price = coin?.current_price || 0;
+    const pct = coin?.price_change_percentage_24h || 0;
+    const emoji = coinEmoji[w.id] || w.symbol?.charAt(0) || '?';
+    const bgColor = coinColor[w.id] || '#5c5c78';
+    const alertHigh = w.high && price >= w.high;
+    const alertLow = w.low && price <= w.low;
+    const triggered = alertHigh || alertLow;
+    const alertMsg = alertHigh ? '🔴 Precio alto alcanzado' : alertLow ? '🟢 Precio bajo alcanzado' : w.high || w.low ? `Alerta: ${w.high ? fmtPrice(w.high) : '—'} / ${w.low ? fmtPrice(w.low) : '—'}` : 'Sin alertas configuradas';
+    return `<div class="watch-card ${triggered ? 'alert-triggered' : ''}" onclick="openDetail('${w.id}')">
+      <button class="watch-remove" onclick="event.stopPropagation();removeWatch('${w.id}')" title="Quitar"><i class="fas fa-times"></i></button>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="coin-icon" style="width:28px;height:28px;font-size:14px;background:${bgColor}22;color:${bgColor};">${emoji}</div>
+        <div><div class="watch-name">${w.name}</div><div class="watch-symbol">${w.symbol}</div></div>
+      </div>
+      <div class="watch-price">${fmtPrice(price)}</div>
+      <div class="watch-change ${pct >= 0 ? 'up' : 'down'}">${fmtPct(pct)} (24h)</div>
+      <div class="watch-alert ${triggered ? 'fired' : ''}"><i class="fas fa-bell"></i> ${alertMsg}</div>
+    </div>`;
+  }).join('');
+}
+
+// ---- DETAIL MODAL ----
+async function openDetail(coinId) {
+  const coin = allCoins.find(c => c.id === coinId);
+  if (!coin) return;
+  currentDetailCoin = coinId;
+  const emoji = coinEmoji[coinId] || coin.symbol?.charAt(0).toUpperCase() || '?';
+  const bgColor = coinColor[coinId] || '#5c5c78';
+  const pct = coin.price_change_percentage_24h || 0;
+  document.getElementById('detail-icon').textContent = emoji;
+  document.getElementById('detail-icon').style.cssText = `background:${bgColor}22;color:${bgColor};width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;flex-shrink:0;`;
+  document.getElementById('detail-name').textContent = coin.name;
+  document.getElementById('detail-symbol').textContent = coin.symbol.toUpperCase() + ' / USD';
+  document.getElementById('detail-price').textContent = fmtPrice(coin.current_price);
+  const chEl = document.getElementById('detail-change');
+  chEl.textContent = fmtPct(pct) + ' (24h)';
+  chEl.style.color = pct >= 0 ? 'var(--green)' : 'var(--red)';
+  document.getElementById('detail-stats').innerHTML = [
+    { label: 'Cap. mercado', val: fmt(coin.market_cap || 0) },
+    { label: 'Volumen 24h', val: fmt(coin.total_volume || 0) },
+    { label: 'Máx. 24h', val: fmtPrice(coin.high_24h || coin.current_price) },
+    { label: 'Mín. 24h', val: fmtPrice(coin.low_24h || coin.current_price) },
+  ].map(s => `<div class="detail-stat"><div class="detail-stat-label">${s.label}</div><div class="detail-stat-val">${s.val}</div></div>`).join('');
+  document.getElementById('detail-overlay').classList.add('open');
+  document.querySelectorAll('.tf-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('.tf-tab').classList.add('active');
+  await loadDetailChart(coinId, '1');
+}
+
+function closeDetail() {
+  document.getElementById('detail-overlay').classList.remove('open');
+  if (detailChart) { detailChart.destroy(); detailChart = null; }
+  currentDetailCoin = null;
+}
+
+async function loadDetailChart(coinId, days) {
+  if (detailChart) { detailChart.destroy(); detailChart = null; }
+  const coin = allCoins.find(c => c.id === coinId);
+  const bgColor = coinColor[coinId] || '#7c5cfc';
+  let prices = [];
+  let labels = [];
+  try {
+    const res = await fetch(`https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=${days}`);
+    if (res.ok) {
+      const data = await res.json();
+      prices = data.prices.map(p => p[1]);
+      labels = data.prices.map(p => {
+        const d = new Date(p[0]);
+        return days === '1' ? d.toLocaleTimeString('es', {hour:'2-digit',minute:'2-digit'}) : d.toLocaleDateString('es', {month:'short',day:'numeric'});
+      });
+    }
+  } catch(e) {}
+  if (!prices.length && coin?.sparkline_in_7d?.price) {
+    prices = coin.sparkline_in_7d.price;
+    labels = prices.map((_, i) => i);
+  }
+  const isUp = prices.length > 1 ? prices[prices.length-1] >= prices[0] : true;
+  const lineColor = isUp ? '#00d084' : '#ff4d6a';
+  const ctx = document.getElementById('detail-chart').getContext('2d');
+  detailChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        data: prices,
+        borderColor: lineColor,
+        borderWidth: 2,
+        fill: true,
+        backgroundColor: (ctx2) => {
+          const g = ctx2.chart.ctx.createLinearGradient(0, 0, 0, 260);
+          g.addColorStop(0, lineColor + '40');
+          g.addColorStop(1, lineColor + '00');
+          return g;
+        },
+        tension: 0.4, pointRadius: 0, pointHoverRadius: 4,
+        pointHoverBackgroundColor: lineColor,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#22222f',
+          borderColor: 'rgba(255,255,255,0.1)',
+          borderWidth: 1,
+          titleColor: '#9898b0',
+          bodyColor: '#f0f0f5',
+          callbacks: { label: ctx => ' ' + fmtPrice(ctx.parsed.y) }
+        }
+      },
+      scales: {
+        x: { display: true, ticks: { color: '#5c5c78', font: { size: 11 }, maxTicksLimit: 8 }, grid: { color: 'rgba(255,255,255,0.04)' } },
+        y: { display: true, position: 'right', ticks: { color: '#5c5c78', font: { size: 11 }, callback: v => fmtPrice(v) }, grid: { color: 'rgba(255,255,255,0.04)' } }
+      }
+    }
+  });
+}
+
+async function setTF(days, btn) {
+  document.querySelectorAll('.tf-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  if (currentDetailCoin) await loadDetailChart(currentDetailCoin, days);
+}
+
+// Llamadas post-carga de mercado (portfolio + watchlist)
+const _afterMarketLoad = () => {
+  if (allCoins.length) {
+    renderPortfolio();
+    renderWatchlist();
+  }
+};
+
+// Close modals on overlay click
+document.getElementById('add-modal').addEventListener('click', e => { if (e.target === e.currentTarget) closeAddModal(); });
+document.getElementById('watch-modal').addEventListener('click', e => { if (e.target === e.currentTarget) closeWatchModal(); });
+document.getElementById('detail-overlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeDetail(); });
+
+// Init portfolio & watchlist
+renderPortfolio();
+renderWatchlist();
+
+
+// ===================== FASE 4: AUTOMATIZACIÓN + ESCALA =====================
+
+// ── TOAST SYSTEM ─────────────────────────────────────────────
+function showToast(icon, title, body, duration=5000) {
+  const wrap = document.getElementById('toast-wrap');
+  const id = 'toast-' + Date.now();
+  const el = document.createElement('div');
+  el.className = 'toast'; el.id = id;
+  el.innerHTML = `<span class="toast-icon">${icon}</span>
+    <div><div class="toast-title">${title}</div><div class="toast-body">${body}</div></div>
+    <button class="toast-close" onclick="removeToast('${id}')">✕</button>`;
+  wrap.appendChild(el);
+  setTimeout(() => removeToast(id), duration);
+}
+function removeToast(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.add('removing');
+  setTimeout(() => el.remove(), 300);
+}
+
+// ── REFRESH PROGRESS BAR ─────────────────────────────────────
+let refreshTimer = null;
+const REFRESH_INTERVAL = 60000;
+function startRefreshBar() {
+  const bar = document.getElementById('refresh-progress');
+  if (!bar) return;
+  bar.style.transition = 'none';
+  bar.style.width = '100%';
+  setTimeout(() => {
+    bar.style.transition = `width ${REFRESH_INTERVAL}ms linear`;
+    bar.style.width = '0%';
+  }, 50);
+}
+
+// ── PRICE ALERTS CHECK ───────────────────────────────────────
+let alertsFired = new Set();
+function checkPriceAlerts() {
+  if (!watchlist.length || !allCoins.length) return;
+  watchlist.forEach(w => {
+    const coin = allCoins.find(c => c.id === w.id);
+    if (!coin) return;
+    const price = coin.current_price;
+    const key_high = w.id + '_high';
+    const key_low = w.id + '_low';
+    if (w.high && price >= w.high && !alertsFired.has(key_high)) {
+      alertsFired.add(key_high);
+      showToast('🔴', `${w.name} superó tu alerta`, `Precio actual: ${fmtPrice(price)} — Alerta: ${fmtPrice(w.high)}`, 8000);
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification(`⚠️ ${w.name} precio alto`, { body: `Precio: ${fmtPrice(price)}` });
+      }
+    }
+    if (w.low && price <= w.low && !alertsFired.has(key_low)) {
+      alertsFired.add(key_low);
+      showToast('🟢', `${w.name} bajó de tu alerta`, `Precio actual: ${fmtPrice(price)} — Alerta: ${fmtPrice(w.low)}`, 8000);
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification(`📉 ${w.name} precio bajo`, { body: `Precio: ${fmtPrice(price)}` });
+      }
+    }
+    if (w.high && price < w.high) alertsFired.delete(key_high);
+    if (w.low && price > w.low) alertsFired.delete(key_low);
+  });
+  renderAlertList();
+}
+
+function renderAlertList() {
+  const list = document.getElementById('alert-list');
+  if (!list) return;
+  if (!watchlist.length) {
+    list.innerHTML = '<div style="padding:1.5rem;text-align:center;color:var(--text3);font-size:13px;">No hay alertas activas. Agrégalas desde Portafolio → Watchlist.</div>';
+    return;
+  }
+  list.innerHTML = watchlist.map(w => {
+    const coin = allCoins.find(c => c.id === w.id);
+    const price = coin?.current_price || 0;
+    const pct = coin?.price_change_percentage_24h || 0;
+    const fired_h = w.high && price >= w.high;
+    const fired_l = w.low && price <= w.low;
+    const fired = fired_h || fired_l;
+    const dotColor = fired ? 'var(--amber)' : 'var(--green)';
+    const statusBg = fired ? 'var(--amber-dim)' : 'var(--green-dim)';
+    const statusColor = fired ? 'var(--amber)' : 'var(--green)';
+    const statusText = fired ? '⚡ Disparada' : '● Activa';
+    return `<div class="alert-row">
+      <div class="alert-dot" style="background:${dotColor};"></div>
+      <span class="alert-coin">${w.symbol}</span>
+      <span class="alert-cond">
+        ${w.high ? `<span style="color:var(--red-dim);background:var(--red-dim);padding:1px 6px;border-radius:4px;color:var(--red);font-size:11px;">↑ ${fmtPrice(w.high)}</span> ` : ''}
+        ${w.low ? `<span style="background:var(--green-dim);padding:1px 6px;border-radius:4px;color:var(--green);font-size:11px;">↓ ${fmtPrice(w.low)}</span>` : ''}
+        <span style="color:var(--text3);margin-left:6px;">actual: ${fmtPrice(price)}</span>
+      </span>
+      <span class="alert-status" style="background:${statusBg};color:${statusColor};">${statusText}</span>
+      <button class="alert-del" onclick="removeWatch('${w.id}')" title="Eliminar alerta"><i class="fas fa-trash"></i></button>
+    </div>`;
+  }).join('');
+}
+
+// ── PUSH NOTIFICATIONS ───────────────────────────────────────
+function requestNotifPermission() {
+  if (!('Notification' in window)) return;
+  if (Notification.permission === 'default') {
+    Notification.requestPermission().then(p => {
+      if (p === 'granted') showToast('🔔', 'Notificaciones activadas', 'Te avisaremos cuando tus alertas se disparen.');
+    });
+  }
+}
+
+// ── FLOATING AFFILIATE BANNER ────────────────────────────────
+const affiliateRotation = [
+  { name:'Binance', desc:'20% descuento en comisiones con nuestro link', logo:'B', bg:'#f0b90b', url:'https://accounts.binance.com/register?ref=TUREFID', section:'mercado' },
+  { name:'Buda.com', desc:'Sin comisión en tu primera compra', logo:'B', bg:'#00a86b', url:'https://buda.com', section:'calculadoras' },
+  { name:'Bitso', desc:'Bono de bienvenida para nuevos usuarios', logo:'B', bg:'#6851ff', url:'https://bitso.com', section:'blog' },
+  { name:'Coinbase', desc:'$10 USD en BTC al registrarte', logo:'C', bg:'#0052ff', url:'https://coinbase.com', section:'portafolio' },
+];
+let currentAffFloat = 0;
+let affFloatHidden = false;
+let affFloatUrl = '';
+
+function showAffiliateFloat(idx) {
+  if (affFloatHidden) return;
+  const a = affiliateRotation[idx % affiliateRotation.length];
+  affFloatUrl = a.url;
+  document.getElementById('aff-float-logo').textContent = a.logo;
+  document.getElementById('aff-float-logo').style.background = a.bg;
+  document.getElementById('aff-float-name').textContent = a.name;
+  document.getElementById('aff-float-desc').textContent = a.desc;
+  const el = document.getElementById('affiliate-float');
+  el.style.display = 'flex';
+  el.style.animation = 'none';
+  setTimeout(() => { el.style.animation = 'floatIn .4s ease'; }, 10);
+}
+
+function affiliateFloatClick() {
+  window.open(affFloatUrl, '_blank', 'noopener,noreferrer');
+  logAffiliateClick(affiliateRotation[currentAffFloat % affiliateRotation.length].name);
+}
+
+function hideAffiliateFloat() {
+  document.getElementById('affiliate-float').style.display = 'none';
+  affFloatHidden = true;
+  setTimeout(() => { affFloatHidden = false; }, 300000);
+}
+
+// Rotate affiliate banner based on scroll position
+function updateAffiliateByScroll() {
+  if (affFloatHidden) return;
+  const sections = ['mercado','portafolio','calculadoras','exchanges','blog','monetizacion'];
+  let current = 0;
+  sections.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el) {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.6) current = i;
+    }
+  });
+  const targetIdx = current % affiliateRotation.length;
+  if (targetIdx !== currentAffFloat) {
+    currentAffFloat = targetIdx;
+    showAffiliateFloat(currentAffFloat);
+  }
+}
+window.addEventListener('scroll', updateAffiliateByScroll, { passive: true });
+
+// ── MONETIZATION METRICS (simuladas + proyectadas) ───────────
+let monMetrics = { visits: 0, rpm: 0, clicks: 0, income: 0 };
+let affiliateClickLog = JSON.parse(localStorage.getItem('cs_aff_clicks') || '[]');
+
+function logAffiliateClick(name) {
+  const entry = { name, time: Date.now() };
+  affiliateClickLog.push(entry);
+  if (affiliateClickLog.length > 1000) affiliateClickLog.shift();
+  localStorage.setItem('cs_aff_clicks', JSON.stringify(affiliateClickLog));
+  updateMonMetrics();
+  showToast('💰', 'Click de afiliado registrado', name + ' — este click podría generar $20–150 USD si el usuario se registra.');
+}
+
+function updateMonMetrics() {
+  const todayClicks = affiliateClickLog.filter(e => Date.now() - e.time < 86400000).length;
+  const rpm = 12.5;
+  const visits = Math.max(todayClicks * 28 + Math.floor(Math.random() * 40), 10);
+  const incomeMonth = (visits * 30 * rpm / 1000) + (todayClicks * 30 * 35);
+
+  document.getElementById('mon-visits').textContent = visits.toLocaleString();
+  document.getElementById('mon-visits-d').textContent = '+' + Math.floor(visits * 0.12) + ' vs ayer';
+  document.getElementById('mon-visits-bar').style.width = Math.min(visits / 500 * 100, 100) + '%';
+
+  document.getElementById('mon-rpm').textContent = '$' + rpm.toFixed(2);
+  document.getElementById('mon-rpm-bar').style.width = (rpm / 25 * 100) + '%';
+
+  document.getElementById('mon-clicks').textContent = todayClicks;
+  document.getElementById('mon-clicks-d').textContent = todayClicks + ' clicks · ' + (todayClicks * 35).toLocaleString('en-US', {style:'currency',currency:'USD'}) + ' potencial';
+  document.getElementById('mon-clicks-bar').style.width = Math.min(todayClicks / 20 * 100, 100) + '%';
+
+  document.getElementById('mon-income').textContent = '$' + Math.round(incomeMonth).toLocaleString();
+  document.getElementById('mon-income-d').textContent = 'Proyección mensual';
+  document.getElementById('mon-income-bar').style.width = Math.min(incomeMonth / 5000 * 100, 100) + '%';
+}
+
+let incomeChart = null;
+function renderIncomeChart() {
+  const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const affiliateData = [0, 0, 120, 280, 450, 620, 800, 1050, 1400, 1800, 2400, 3200];
+  const adsenseData = [0, 0, 0, 0, 80, 150, 240, 380, 520, 700, 950, 1300];
+  const newsletterData = [0, 0, 0, 0, 0, 0, 50, 100, 150, 200, 300, 450];
+
+  if (incomeChart) incomeChart.destroy();
+  const ctx = document.getElementById('income-chart');
+  if (!ctx) return;
+  incomeChart = new Chart(ctx.getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: months,
+      datasets: [
+        { label:'Afiliados', data: affiliateData, backgroundColor: 'rgba(124,92,252,0.8)', borderRadius: 4, stack: 'total' },
+        { label:'AdSense', data: adsenseData, backgroundColor: 'rgba(0,208,132,0.8)', borderRadius: 4, stack: 'total' },
+        { label:'Newsletter', data: newsletterData, backgroundColor: 'rgba(255,184,48,0.8)', borderRadius: 4, stack: 'total' },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#22222f', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1,
+          titleColor: '#9898b0', bodyColor: '#f0f0f5',
+          callbacks: { label: c => ` ${c.dataset.label}: $${c.parsed.y.toLocaleString()}` }
+        }
+      },
+      scales: {
+        x: { stacked: true, grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#5c5c78', font: { size: 11 } } },
+        y: { stacked: true, grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#5c5c78', font: { size: 11 }, callback: v => '$' + v.toLocaleString() } }
+      }
+    }
+  });
+}
+
+// ── PROGRAMMATIC SEO PAGES ───────────────────────────────────
+function renderProgSEO() {
+  const grid = document.getElementById('prog-grid');
+  if (!grid || !allCoins.length) return;
+  const pages = allCoins.slice(0, 12).map(c => ({
+    title: `Precio ${c.name} en Chile hoy`,
+    url: `/precio/${c.symbol.toLowerCase()}-clp`,
+    meta: `${fmtPrice(c.current_price)} · ${fmtPct(c.price_change_percentage_24h||0)} (24h)`,
+    id: c.id
+  }));
+  const extras = [
+    { title:'Comprar Bitcoin en Chile', url:'/comprar/bitcoin-chile', meta:'Guía + exchanges disponibles' },
+    { title:'Mejores exchanges México', url:'/exchanges/mexico', meta:'Comparativa actualizada 2025' },
+    { title:'Cripto con menor comisión', url:'/comparativa/comisiones', meta:'Binance vs Bitso vs Buda' },
+    { title:'Precio ETH en pesos CLP', url:'/precio/eth-clp', meta:'Conversor en tiempo real' },
+  ];
+  grid.innerHTML = [...pages, ...extras].map(p => `
+    <div class="prog-card" onclick="showToast('🔗','Página SEO programática','URL: ${p.url} — En producción se genera automáticamente con datos en vivo.')">
+      <div class="prog-card-title">${p.title}</div>
+      <div class="prog-card-url">${p.url}</div>
+      <div class="prog-card-meta">${p.meta}</div>
+    </div>`).join('');
+}
+
+// ── PATCH fetchMarketData: consolida todas las fases ─────────
+const _origFetch = fetchMarketData;
+fetchMarketData = async function() {
+  await _origFetch();
+  _afterMarketLoad();
+  checkPriceAlerts();
+  renderProgSEO();
+  updateMonMetrics();
+  startRefreshBar();
+  showToast('🔄', 'Precios actualizados', 'Datos de CoinGecko sincronizados correctamente.');
+};
+
+// ── NAV LINK MONETIZACIÓN ────────────────────────────────────
+const navLinks = document.querySelector('.nav-links');
+if (navLinks) {
+  const li = document.createElement('li');
+  li.innerHTML = '<a href="#monetizacion" style="color:var(--accent);">Métricas</a>';
+  navLinks.appendChild(li);
+}
+
+// ── INIT FASE 4 ──────────────────────────────────────────────
+renderIncomeChart();
+updateMonMetrics();
+startRefreshBar();
+setTimeout(() => { showAffiliateFloat(0); requestNotifPermission(); }, 4000);
+setInterval(() => {
+  currentAffFloat = (currentAffFloat + 1) % affiliateRotation.length;
+  showAffiliateFloat(currentAffFloat);
+}, 90000);
+
+// ===================== BACK TO TOP =====================
+window.addEventListener('scroll', () => {
+  document.getElementById('back-to-top').classList.toggle('visible', window.scrollY > 320);
+}, { passive: true });
+
+// ===================== NAV ACTIVO EN SCROLL =====================
+const navSections = ['mercado','portafolio','calculadoras','exchanges','blog'];
+const navObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    document.querySelectorAll('.nav-links a').forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + entry.target.id);
+    });
+  });
+}, { rootMargin: '-40% 0px -55% 0px' });
+navSections.forEach(id => {
+  const el = document.getElementById(id);
+  if (el) navObserver.observe(el);
+});
+
+// ===================== SCROLL REVEAL =====================
+const revealObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('revealed'); revealObserver.unobserve(e.target); } });
+}, { threshold: 0.08 });
+document.querySelectorAll('section, .stats-bar, .calc-grid, .affiliate-grid, .blog-grid, .portfolio-table-wrap, .rebalance-wrap').forEach(el => {
+  el.classList.add('reveal');
+  revealObserver.observe(el);
+});
+
+// ===================== ESCAPE KEY =====================
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  if (document.getElementById('article-overlay').classList.contains('open')) { closeArticle(); return; }
+  if (document.getElementById('detail-overlay').classList.contains('open')) { closeDetail(); return; }
+  if (document.getElementById('add-modal').classList.contains('open')) { closeAddModal(); return; }
+  if (document.getElementById('watch-modal').classList.contains('open')) { closeWatchModal(); return; }
+  if (document.getElementById('nav-mobile').classList.contains('open')) { closeMobileNav(); return; }
+});
+
+// ===================== MOBILE NAV =====================
+function toggleMobileNav() {
+  const menu = document.getElementById('nav-mobile');
+  menu.classList.toggle('open');
+}
+function closeMobileNav() {
+  document.getElementById('nav-mobile').classList.remove('open');
+}
+document.addEventListener('click', e => {
+  const menu = document.getElementById('nav-mobile');
+  if (menu.classList.contains('open') && !e.target.closest('nav') && !e.target.closest('#nav-mobile')) {
+    closeMobileNav();
+  }
+});
+
+// ===================== INIT =====================
+renderBlog();
+fetchMarketData();
+fetchGlobalData();
+fetchFXRates();
+calcCompuesto();
+calcPL();
+calcDCA();
+setInterval(fetchMarketData, 60000);
+setInterval(fetchGlobalData, 120000);
+setInterval(fetchFXRates, 3600000);
+</script>
+</body>
+</html>
