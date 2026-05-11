@@ -1424,6 +1424,16 @@
     </div>
   </section>
 
+  <!-- PÁGINAS DE PRECIOS Y GUÍAS -->
+  <section id="guias" style="padding: 4rem 0;">
+    <div class="container">
+      <div class="section-label">Recursos especializados</div>
+      <div class="section-title">Precios y guías para LATAM</div>
+      <p class="section-sub">Páginas con datos en vivo, conversores y guías locales para Chile y México.</p>
+      <div class="prog-grid" id="prog-grid"></div>
+    </div>
+  </section>
+
   <!-- BLOG -->
   <!-- FASE 3: BLOG COMPLETO -->
   <section id="blog" style="background: var(--bg2); margin: 0; padding: 4rem 0;">
@@ -1499,76 +1509,10 @@
   </div>
 
 
-  <!-- FASE 4: DASHBOARD MONETIZACIÓN -->
-  <section id="monetizacion" style="padding:4rem 0;background:var(--bg2);margin:0;">
-    <div class="container">
-      <div class="section-label">Fase 4 — Automatización</div>
-      <div class="section-title">Dashboard de monetización</div>
-      <p class="section-sub">Métricas en tiempo real de rendimiento publicitario y conversiones de afiliados. Actualización automática.</p>
-
-      <div class="monetization-grid">
-        <div class="mon-card">
-          <div class="mon-label">Visitas hoy (est.)</div>
-          <div class="mon-value" id="mon-visits">—</div>
-          <div class="mon-delta up" id="mon-visits-d">—</div>
-          <div class="mon-bar-wrap"><div class="mon-bar" id="mon-visits-bar" style="background:var(--accent);width:0%"></div></div>
-        </div>
-        <div class="mon-card">
-          <div class="mon-label">RPM estimado AdSense</div>
-          <div class="mon-value" id="mon-rpm">—</div>
-          <div class="mon-delta" id="mon-rpm-d">Nicho finanzas cripto</div>
-          <div class="mon-bar-wrap"><div class="mon-bar" id="mon-rpm-bar" style="background:var(--green);width:0%"></div></div>
-        </div>
-        <div class="mon-card">
-          <div class="mon-label">Clicks afiliados hoy</div>
-          <div class="mon-value" id="mon-clicks">—</div>
-          <div class="mon-delta up" id="mon-clicks-d">—</div>
-          <div class="mon-bar-wrap"><div class="mon-bar" id="mon-clicks-bar" style="background:var(--amber);width:0%"></div></div>
-        </div>
-        <div class="mon-card">
-          <div class="mon-label">Ingreso estimado mes</div>
-          <div class="mon-value" id="mon-income">—</div>
-          <div class="mon-delta" id="mon-income-d">Afiliados + AdSense</div>
-          <div class="mon-bar-wrap"><div class="mon-bar" id="mon-income-bar" style="background:var(--green);width:0%"></div></div>
-        </div>
-      </div>
-
-      <!-- Gráfico de ingresos -->
-      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:1.5rem;margin-bottom:1.5rem;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:12px;">
-          <div style="font-family:var(--font-head);font-size:1rem;font-weight:700;">Proyección de ingresos (12 meses)</div>
-          <div style="display:flex;gap:16px;font-size:12px;color:var(--text3);">
-            <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:3px;border-radius:2px;background:var(--accent);display:inline-block;"></span>Afiliados</span>
-            <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:3px;border-radius:2px;background:var(--green);display:inline-block;"></span>AdSense</span>
-            <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:3px;border-radius:2px;background:var(--amber);display:inline-block;"></span>Newsletter</span>
-          </div>
-        </div>
-        <div style="position:relative;height:200px;"><canvas id="income-chart"></canvas></div>
-      </div>
-
-      <!-- Alertas de precio activas -->
-      <div class="alert-manager" id="alert-manager-section">
-        <div class="alert-manager-header">
-          <span style="font-family:var(--font-head);font-size:1rem;font-weight:700;">Alertas de precio activas</span>
-          <button class="btn-add" onclick="openWatchModal()" style="font-size:12px;padding:6px 14px;">
-            <i class="fas fa-plus"></i> Nueva alerta
-          </button>
-        </div>
-        <div class="alert-list" id="alert-list">
-          <div style="padding:1.5rem;text-align:center;color:var(--text3);font-size:13px;">
-            No hay alertas activas. Agrégalas desde la sección Portafolio → Watchlist.
-          </div>
-        </div>
-      </div>
-
-      <!-- Contenido programático SEO -->
-      <div class="prog-seo">
-        <div class="prog-seo-title">Páginas de precios y guías</div>
-        <div class="prog-seo-desc">Páginas especializadas con datos en vivo, conversores y guías locales para Chile y México.</div>
-        <div class="prog-grid" id="prog-grid"></div>
-      </div>
-    </div>
-  </section>
+  <!-- Alertas de precio (ocultas, solo lógica JS) -->
+  <div id="alert-manager-section" style="display:none;">
+    <div class="alert-list" id="alert-list"></div>
+  </div>
 
   <!-- TOAST CONTAINER -->
   <div class="toast-wrap" id="toast-wrap"></div>
@@ -2861,7 +2805,7 @@ function hideAffiliateFloat() {
 // Rotate affiliate banner based on scroll position
 function updateAffiliateByScroll() {
   if (affFloatHidden) return;
-  const sections = ['mercado','portafolio','calculadoras','exchanges','blog','monetizacion'];
+  const sections = ['mercado','portafolio','calculadoras','exchanges','guias','blog'];
   let current = 0;
   sections.forEach((id, i) => {
     const el = document.getElementById(id);
@@ -2892,25 +2836,7 @@ function logAffiliateClick(name) {
 }
 
 function updateMonMetrics() {
-  const todayClicks = affiliateClickLog.filter(e => Date.now() - e.time < 86400000).length;
-  const rpm = 12.5;
-  const visits = Math.max(todayClicks * 28 + Math.floor(Math.random() * 40), 10);
-  const incomeMonth = (visits * 30 * rpm / 1000) + (todayClicks * 30 * 35);
-
-  document.getElementById('mon-visits').textContent = visits.toLocaleString();
-  document.getElementById('mon-visits-d').textContent = '+' + Math.floor(visits * 0.12) + ' vs ayer';
-  document.getElementById('mon-visits-bar').style.width = Math.min(visits / 500 * 100, 100) + '%';
-
-  document.getElementById('mon-rpm').textContent = '$' + rpm.toFixed(2);
-  document.getElementById('mon-rpm-bar').style.width = (rpm / 25 * 100) + '%';
-
-  document.getElementById('mon-clicks').textContent = todayClicks;
-  document.getElementById('mon-clicks-d').textContent = todayClicks + ' clicks · ' + (todayClicks * 35).toLocaleString('en-US', {style:'currency',currency:'USD'}) + ' potencial';
-  document.getElementById('mon-clicks-bar').style.width = Math.min(todayClicks / 20 * 100, 100) + '%';
-
-  document.getElementById('mon-income').textContent = '$' + Math.round(incomeMonth).toLocaleString();
-  document.getElementById('mon-income-d').textContent = 'Proyección mensual';
-  document.getElementById('mon-income-bar').style.width = Math.min(incomeMonth / 5000 * 100, 100) + '%';
+  // dashboard removed from public view — no-op
 }
 
 let incomeChart = null;
@@ -3024,17 +2950,8 @@ fetchMarketData = async function() {
   showToast('🔄', 'Precios actualizados', 'Datos de CoinGecko sincronizados correctamente.');
 };
 
-// ── NAV LINK MONETIZACIÓN ────────────────────────────────────
-const navLinks = document.querySelector('.nav-links');
-if (navLinks) {
-  const li = document.createElement('li');
-  li.innerHTML = '<a href="#monetizacion" style="color:var(--accent);">Métricas</a>';
-  navLinks.appendChild(li);
-}
-
-// ── INIT FASE 4 ──────────────────────────────────────────────
-renderIncomeChart();
-updateMonMetrics();
+// ── GUÍAS: render inmediato sin esperar market data ──────────
+renderProgSEO();
 startRefreshBar();
 setTimeout(() => { showAffiliateFloat(0); requestNotifPermission(); }, 4000);
 setInterval(() => {
