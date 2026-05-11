@@ -1620,12 +1620,9 @@
   <!-- NEWSLETTER -->
   <div class="container">
     <div class="newsletter-section">
-      <div class="newsletter-title">📬 El mercado cripto, en español y para LATAM</div>
-      <p class="newsletter-sub">Análisis semanal, movimientos importantes y guías para invertir desde Chile, México y Colombia. Sin jerga, sin spam.</p>
+      <div class="newsletter-title">📬 Guías y análisis, sin spam</div>
+      <p class="newsletter-sub">Recibe avisos cuando publiquemos nuevas guías o análisis en el sitio. Sin jerga, sin spam.</p>
       <form class="newsletter-form" onsubmit="handleNewsletterSubmit(event)">
-        <input type="hidden" name="access_key" value="629fb944-db14-4c19-8e66-d8497cc63e36" />
-        <input type="hidden" name="subject" value="Nueva suscripción — Criptum21" />
-        <input type="hidden" name="from_name" value="Criptum21 Newsletter" />
         <input type="email" class="newsletter-input" name="email" id="nl-email" placeholder="tu@email.com" required />
         <button type="submit" class="btn-primary">Suscribirse</button>
       </form>
@@ -2293,15 +2290,22 @@ function handleNewsletterSubmit(e) {
   btn.disabled = true;
   btn.textContent = 'Enviando…';
 
-  fetch('https://api.web3forms.com/submit', {
+  fetch('https://connect.mailerlite.com/api/subscribers', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify({ access_key: '629fb944-db14-4c19-8e66-d8497cc63e36', email, subject: 'Nueva suscripción — Criptum21', from_name: 'Criptum21 Newsletter' })
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI0IiwianRpIjoiY2FlOTk0N2YxZGM5ZjI0MTIxZTc3Zjk2NGQ5Y2E2NzAyMGQyZGU0ZDQ0MDNjYzc2MGYyYzI3ZDM4NTYxMDEyZmUxODQwNmNjODFiMDk5ZWIiLCJpYXQiOjE3Nzg1Mzc3OTIuMjU2MzkxLCJuYmYiOjE3Nzg1Mzc3OTIuMjU2Mzk0LCJleHAiOjQ5MzQyMTEzOTIuMjQ4NjczLCJzdWIiOiIyMzU4Mzk5Iiwic2NvcGVzIjpbXX0.jalC-YuY-Hl3dUojfDyfYuxlMMzSrx3Ek7LzdxgxCCfAWTLbs-4BXjR7SnEdm6jQSj4qS8SHbInXGFeRUUVKsfmaFauD2n1mkmq7FWIgya-KA2idkZqQhGjXqo5GdLrJgWRNfZBaxViqWXeXe7qE9PyZMTH96TAdcGC3V0KSKtJ7xbKpUJn1yJWRuh7UeEd0A2NsKD-H0HXhFcoonU_Y-949HncLJ22uMPJHV-SiKbka1bXAk5JX8kCrtEeEXGJrL7DOzstZGTHUo8iRWST3yRLB0pyepgtilNbvBXU69fmIIagfE0KhrHkY8_ZEbLO2RM75MgJub5HsZHqULtItiNkdf6bCIlDiQDyjeb4XUGGmpCgs2dXkS8aFKRnMZv0xdlcH23wDiHyVKMgV5ChNFNhH9hhkxXh1dfu6tUF5DtISmOErl7jgjvpl-5MwsikcwEgwBqjUBg8Zgwlb6QcaLB4D0TtiBYyiknBAS3S4HDcPHA9kDZ9A_FfRzz7ZRWfROwmuILh1J8-zAcJp0P-QwR74uU_4TBACZ7qTmbit8PUUyl0l_a7yz3p2OsJ6dUq1WiA2y0uEsDkxWIfo0sXdsBV_4jdN4pg71gMs7qlljU37xB4IOanZP9GIPAA5zplNEpnsxUEJ_VQMvblOba4BT_cm_tLVR9jfAUj3pR-ioR0'
+    },
+    body: JSON.stringify({ email, groups: ['187210347507090442'] })
   })
   .then(res => res.json())
   .then(data => {
-    if (data.success) {
-      showToast('✉️', '¡Suscrito con éxito!', 'Recibirás el próximo resumen semanal en ' + email);
+    if (data.data || data.id) {
+      showToast('✉️', '¡Suscrito con éxito!', 'Te avisaremos cuando publiquemos nuevas guías y análisis.');
+      form.reset();
+    } else if (data.errors && data.errors.email) {
+      showToast('✉️', '¡Ya estás suscrito!', 'Este email ya figura en nuestra lista.');
       form.reset();
     } else {
       showToast('⚠️', 'Error al suscribir', 'Intenta de nuevo en un momento.');
