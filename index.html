@@ -24,7 +24,7 @@
       --border2: rgba(255,255,255,0.10);
       --text: #f0f0f5;
       --text2: #9898b0;
-      --text3: #5c5c78;
+      --text3: #7878a0;
       --accent: #7c5cfc;
       --accent2: #5b3fcc;
       --green: #00d084;
@@ -113,7 +113,7 @@
     .container { max-width: 1240px; margin: 0 auto; padding: 0 1.5rem; }
 
     /* SECTION */
-    section { padding: 3rem 0; }
+    section { padding: 5rem 0; }
     .section-label {
       font-size: 11px; font-weight: 600;
       letter-spacing: .12em; text-transform: uppercase;
@@ -275,7 +275,7 @@
     .btn-buy:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
 
     /* CALCULADORAS */
-    .calc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.5rem; }
+    .calc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
     .calc-card {
       background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--r2); padding: 1.75rem; overflow: hidden;
@@ -325,7 +325,11 @@
       transition: border-color .2s, transform .2s;
     }
     .affiliate-card:hover { border-color: var(--border2); transform: translateY(-2px); }
-    .affiliate-card.featured { border-color: rgba(124,92,252,0.4); }
+    .affiliate-card.featured {
+      border-color: rgba(124,92,252,0.5);
+      border-top: 2px solid var(--accent);
+      box-shadow: 0 0 40px rgba(124,92,252,0.08);
+    }
     .affiliate-header { display: flex; align-items: center; gap: 12px; }
     .exchange-logo {
       width: 48px; height: 48px; border-radius: 12px;
@@ -373,8 +377,13 @@
     }
     .blog-card:hover { border-color: var(--border2); transform: translateY(-2px); }
     .blog-img {
-      height: 160px; display: flex; align-items: center; justify-content: center;
-      font-size: 3rem;
+      height: 100px; display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; position: relative; overflow: hidden;
+    }
+    .blog-img::after {
+      content: ''; position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px);
+      background-size: 18px 18px; pointer-events: none;
     }
     .blog-body { padding: 1.25rem; }
     .blog-cat {
@@ -423,6 +432,13 @@
       background: var(--bg3); border-radius: 8px;
       padding: .75rem 1rem; margin-bottom: 1.5rem;
     }
+
+    /* REVEAL ANIMATIONS */
+    .reveal {
+      opacity: 0; transform: translateY(20px);
+      transition: opacity .55s ease, transform .55s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
 
     /* LOADING */
     .skeleton {
@@ -621,7 +637,13 @@
     .blog-card-featured:hover { border-color: var(--border2); transform: translateY(-2px); }
     .blog-img-lg {
       height: 100%; min-height: 200px;
-      display: flex; align-items: center; justify-content: center; font-size: 5rem;
+      display: flex; align-items: center; justify-content: center; font-size: 4rem;
+      position: relative; overflow: hidden;
+    }
+    .blog-img-lg::after {
+      content: ''; position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px);
+      background-size: 18px 18px; pointer-events: none;
     }
     .blog-tag {
       display: inline-flex; align-items: center;
@@ -1545,7 +1567,7 @@
         <input type="email" class="newsletter-input" name="email" id="nl-email" placeholder="tu@email.com" required />
         <button type="submit" class="btn-primary">Suscribirse</button>
       </form>
-      <p style="font-size:12px;color:var(--text3);margin-top:1rem;">+3.200 inversores de LATAM ya suscritos. Sin spam, cancela cuando quieras.</p>
+      <p style="font-size:12px;color:var(--text3);margin-top:1rem;">Sin spam. Cancela cuando quieras.</p>
     </div>
   </div>
 
@@ -2131,6 +2153,7 @@ function renderBlog() {
   }).join('');
   const lm = document.getElementById('blog-load-more');
   if (lm) lm.style.display = page.length < filtered.length ? 'block' : 'none';
+  if (typeof applyReveal === 'function') applyReveal(document.getElementById('blog-grid'));
 }
 
 function setBlogFilter(cat) { blogFilter = cat; blogPage = 1; renderBlog(); }
@@ -3090,6 +3113,19 @@ calcDCA();
 setInterval(fetchMarketData, 60000);
 setInterval(fetchGlobalData, 120000);
 setInterval(fetchFXRates, 3600000);
+
+// Scroll reveal
+const revealObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); }
+  });
+}, { threshold: 0.08 });
+function applyReveal(scope) {
+  (scope || document).querySelectorAll('.calc-card, .affiliate-card, .stat-cell, .prog-card, .blog-card, .blog-card-featured').forEach(el => {
+    if (!el.classList.contains('reveal')) { el.classList.add('reveal'); revealObserver.observe(el); }
+  });
+}
+applyReveal();
 </script>
 </body>
 </html>
