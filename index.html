@@ -1870,6 +1870,7 @@ function calcCompuesto() {
   if (!n) return;
   let total = P * Math.pow(1+r, n);
   if (r > 0) total += m * ((Math.pow(1+r,n)-1)/r);
+  else total += m * n;
   const invertido = P + m*n;
   const ganancia = total - invertido;
   document.getElementById('ci-total').textContent = fmt(total).replace('$','$ ');
@@ -1886,7 +1887,7 @@ function calcPL() {
   const bruto = coins * pv;
   const fees = (inv + bruto) * fee;
   const neto = bruto - inv - fees;
-  const pct = (neto / inv) * 100;
+  const pct = inv > 0 ? (neto / inv) * 100 : 0;
   const el = document.getElementById('pl-total');
   el.textContent = (neto >= 0 ? '+' : '') + fmt(neto).replace('$','$ ');
   el.style.color = neto >= 0 ? 'var(--green)' : 'var(--red)';
@@ -2884,8 +2885,8 @@ function renderProgSEO() {
 
   const btc = allCoins.find(c => c.id === 'bitcoin');
   const eth = allCoins.find(c => c.id === 'ethereum');
-  const clp = fxRates.CLP || 940;
-  const mxn = fxRates.MXN || 17.5;
+  const clp = fxRates.clp || 940;
+  const mxn = fxRates.mxn || 17.5;
 
   const fmtCLP = n => '$' + Math.round(n).toLocaleString('es-CL') + ' CLP';
   const fmtMXN = n => '$' + Math.round(n).toLocaleString('es-MX') + ' MXN';
