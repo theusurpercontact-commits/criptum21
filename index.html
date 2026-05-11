@@ -3013,19 +3013,71 @@ document.addEventListener('click', e => {
   }
 });
 
-// ===================== INIT =====================
-// Load blog from JSON (generated daily by GitHub Action), fallback to hardcoded
-(async () => {
+// ===================== COINTELEGRAPH RSS =====================
+function _rssCategory(cats) {
+  const s = cats.join(' ').toLowerCase();
+  if (s.includes('bitcoin') || s.includes('btc'))            return { emoji:'₿',  bg:'#f7931a22', cat:'Bitcoin' };
+  if (s.includes('ethereum') || s.includes('eth'))           return { emoji:'🔷', bg:'#627eea22', cat:'Ethereum' };
+  if (s.includes('defi') || s.includes('finanza'))           return { emoji:'🌐', bg:'#9b59b622', cat:'DeFi' };
+  if (s.includes('nft') || s.includes('arte'))               return { emoji:'🎨', bg:'#9b59b622', cat:'NFT' };
+  if (s.includes('legal') || s.includes('regulac'))          return { emoji:'📋', bg:'#4a90d922', cat:'Legal' };
+  if (s.includes('altcoin') || s.includes('solana') || s.includes('cardano')) return { emoji:'🚀', bg:'#7c5cfc22', cat:'Altcoins' };
+  return { emoji:'📰', bg:'#00d08422', cat:'Mercado' };
+}
+
+function _rssDate(str) {
+  const m = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  const d = new Date(str);
+  return isNaN(d) ? str : `${d.getDate()} ${m[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+function _rssSlug(title) {
+  return title.toLowerCase()
+    .replace(/[áàä]/g,'a').replace(/[éèë]/g,'e').replace(/[íìï]/g,'i')
+    .replace(/[óòö]/g,'o').replace(/[úùü]/g,'u').replace(/ñ/g,'n')
+    .replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,50);
+}
+
+async function fetchCoinTelegraphNews() {
+  const url = 'https://api.rss2json.com/v1/api.json?rss_url=' +
+    encodeURIComponent('https://es.cointelegraph.com/rss') + '&count=15';
   try {
-    const res = await fetch('blog-posts.json?v=' + Date.now());
-    if (res.ok) {
-      const posts = await res.json();
-      if (Array.isArray(posts) && posts.length) {
-        CMS_ARTICLES.length = 0;
-        posts.forEach(p => CMS_ARTICLES.push(p));
-      }
-    }
-  } catch(e) {}
+    const res = await fetch(url);
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+    if (data.status !== 'ok' || !data.items?.length) throw new Error();
+
+    return data.items.map(item => {
+      const { emoji, bg, cat } = _rssCategory(item.categories || []);
+      const plain = (item.description || '').replace(/<[^>]+>/g, '').trim();
+      const excerpt = plain.slice(0, 180) + (plain.length > 180 ? '…' : '');
+      const words = plain.split(/\s+/).length;
+      const content = (item.description || '') +
+        `<div style="margin-top:1.5rem;padding:1rem 1.25rem;background:rgba(124,92,252,0.08);border:1px solid rgba(124,92,252,0.2);border-radius:10px;text-align:center;">
+          <p style="color:var(--text2);font-size:13px;margin-bottom:.75rem;">Artículo completo en CoinTelegraph ES</p>
+          <a href="${item.link}" target="_blank" rel="noopener" style="background:var(--accent);color:#fff;padding:9px 22px;border-radius:8px;text-decoration:none;font-weight:500;font-size:14px;">Leer artículo completo →</a>
+        </div>`;
+      return {
+        id: _rssSlug(item.title),
+        cat, featured: false,
+        title: item.title, excerpt, emoji, bg,
+        time: Math.max(2, Math.round(words / 200)) + ' min',
+        date: _rssDate(item.pubDate),
+        author: item.author || 'CoinTelegraph ES',
+        tags: (item.categories || []).slice(0, 3),
+        content
+      };
+    });
+  } catch(e) { return null; }
+}
+
+// ===================== INIT =====================
+(async () => {
+  const news = await fetchCoinTelegraphNews();
+  if (news && news.length) {
+    CMS_ARTICLES.length = 0;
+    news.forEach(p => CMS_ARTICLES.push(p));
+  }
   renderBlog();
 })();
 fetchMarketData();
