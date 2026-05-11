@@ -818,8 +818,8 @@
       transition: border-color .2s;
     }
     .prog-card:hover { border-color: var(--accent); }
+    .prog-card-label { font-size: 11px; color: var(--accent); margin-bottom: 5px; font-weight: 600; letter-spacing: .04em; }
     .prog-card-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
-    .prog-card-url { font-size: 11px; color: var(--accent); margin-bottom: 6px; font-family: var(--font-head); }
     .prog-card-meta { font-size: 11px; color: var(--text3); }
 
     /* BACK TO TOP */
@@ -1563,8 +1563,8 @@
 
       <!-- Contenido programático SEO -->
       <div class="prog-seo">
-        <div class="prog-seo-title">Páginas SEO programáticas</div>
-        <div class="prog-seo-desc">Auto-generadas por moneda. Cada una tiene URL propia, meta tags únicos y datos en vivo — sin escribir una sola página a mano.</div>
+        <div class="prog-seo-title">Páginas de precios y guías</div>
+        <div class="prog-seo-desc">Páginas especializadas con datos en vivo, conversores y guías locales para Chile y México.</div>
         <div class="prog-grid" id="prog-grid"></div>
       </div>
     </div>
@@ -2954,25 +2954,62 @@ function renderIncomeChart() {
 // ── PROGRAMMATIC SEO PAGES ───────────────────────────────────
 function renderProgSEO() {
   const grid = document.getElementById('prog-grid');
-  if (!grid || !allCoins.length) return;
-  const pages = allCoins.slice(0, 12).map(c => ({
-    title: `Precio ${c.name} en Chile hoy`,
-    url: `/precio/${c.symbol.toLowerCase()}-clp`,
-    meta: `${fmtPrice(c.current_price)} · ${fmtPct(c.price_change_percentage_24h||0)} (24h)`,
-    id: c.id
-  }));
-  const extras = [
-    { title:'Comprar Bitcoin en Chile', url:'/comprar/bitcoin-chile', meta:'Guía + exchanges disponibles' },
-    { title:'Mejores exchanges México', url:'/exchanges/mexico', meta:'Comparativa actualizada 2025' },
-    { title:'Cripto con menor comisión', url:'/comparativa/comisiones', meta:'Binance vs Bitso vs Buda' },
-    { title:'Precio ETH en pesos CLP', url:'/precio/eth-clp', meta:'Conversor en tiempo real' },
+  if (!grid) return;
+
+  const btc = allCoins.find(c => c.id === 'bitcoin');
+  const eth = allCoins.find(c => c.id === 'ethereum');
+  const clp = fxRates.CLP || 940;
+  const mxn = fxRates.MXN || 17.5;
+
+  const fmtCLP = n => '$' + Math.round(n).toLocaleString('es-CL') + ' CLP';
+  const fmtMXN = n => '$' + Math.round(n).toLocaleString('es-MX') + ' MXN';
+  const pctStr = n => (n >= 0 ? '+' : '') + (n || 0).toFixed(2) + '%';
+
+  const pages = [
+    {
+      title: 'Precio Bitcoin en Chile',
+      url: 'precio-bitcoin-chile.html',
+      meta: btc ? fmtCLP(btc.current_price * clp) + ' · ' + pctStr(btc.price_change_percentage_24h) + ' (24h)' : 'BTC · datos en vivo',
+      label: '🇨🇱 BTC/CLP'
+    },
+    {
+      title: 'Precio Bitcoin en México',
+      url: 'precio-bitcoin-mexico.html',
+      meta: btc ? fmtMXN(btc.current_price * mxn) + ' · ' + pctStr(btc.price_change_percentage_24h) + ' (24h)' : 'BTC · datos en vivo',
+      label: '🇲🇽 BTC/MXN'
+    },
+    {
+      title: 'Precio Ethereum en Chile',
+      url: 'precio-ethereum-chile.html',
+      meta: eth ? fmtCLP(eth.current_price * clp) + ' · ' + pctStr(eth.price_change_percentage_24h) + ' (24h)' : 'ETH · datos en vivo',
+      label: '🇨🇱 ETH/CLP'
+    },
+    {
+      title: 'Cómo comprar Bitcoin en Chile',
+      url: 'comprar-bitcoin-chile.html',
+      meta: 'Guía paso a paso · Buda.com · Orionx',
+      label: '📖 Guía Chile'
+    },
+    {
+      title: 'Cómo comprar Bitcoin en México',
+      url: 'comprar-bitcoin-mexico.html',
+      meta: 'Guía paso a paso · Bitso · SPEI',
+      label: '📖 Guía México'
+    },
+    {
+      title: 'Mejores exchanges en Chile',
+      url: 'exchanges-chile.html',
+      meta: 'Buda · Orionx · Binance · Kraken · Coinbase',
+      label: '🏆 Ranking 2026'
+    },
   ];
-  grid.innerHTML = [...pages, ...extras].map(p => `
-    <div class="prog-card" onclick="showToast('🔗','Página SEO programática','URL: ${p.url} — En producción se genera automáticamente con datos en vivo.')">
+
+  grid.innerHTML = pages.map(p => `
+    <a class="prog-card" href="${p.url}" style="text-decoration:none;color:inherit;">
+      <div class="prog-card-label">${p.label}</div>
       <div class="prog-card-title">${p.title}</div>
-      <div class="prog-card-url">${p.url}</div>
       <div class="prog-card-meta">${p.meta}</div>
-    </div>`).join('');
+    </a>`).join('');
 }
 
 // ── PATCH fetchMarketData: consolida todas las fases ─────────
