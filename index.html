@@ -2275,12 +2275,17 @@ function handleNewsletterSubmit(e) {
 
   fetch('https://api.web3forms.com/submit', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
     body: JSON.stringify({ access_key: '629fb944-db14-4c19-8e66-d8497cc63e36', email, subject: 'Nueva suscripción — Criptum21', from_name: 'Criptum21 Newsletter' })
   })
-  .then(() => {
-    showToast('✉️', '¡Suscrito con éxito!', 'Recibirás el próximo resumen semanal en ' + email);
-    form.reset();
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      showToast('✉️', '¡Suscrito con éxito!', 'Recibirás el próximo resumen semanal en ' + email);
+      form.reset();
+    } else {
+      showToast('⚠️', 'Error al suscribir', 'Intenta de nuevo en un momento.');
+    }
   })
   .catch(() => {
     showToast('⚠️', 'Error al suscribir', 'Intenta de nuevo en un momento.');
