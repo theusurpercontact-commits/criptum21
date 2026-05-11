@@ -59,12 +59,10 @@
       padding: 0 2rem; height: 64px;
     }
     .nav-logo {
-      font-family: var(--font-head);
-      font-size: 1.3rem; font-weight: 700;
-      background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      text-decoration: none;
+      display: flex; align-items: center;
+      text-decoration: none; flex-shrink: 0;
     }
+    .nav-logo img { height: 42px; width: auto; object-fit: contain; display: block; }
     .nav-links { display: flex; gap: 2rem; list-style: none; }
     .nav-links a {
       color: var(--text2); text-decoration: none;
@@ -884,7 +882,7 @@
 
 <!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo">⚡ Criptum21</a>
+  <a href="#" class="nav-logo"><img src="logo-criptum21.png" alt="Criptum21" /></a>
   <ul class="nav-links">
     <li><a href="#mercado" class="active">Mercado</a></li>
     <li><a href="#portafolio">Portafolio</a></li>
@@ -1585,7 +1583,7 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <a href="#" class="nav-logo" style="font-size:1.2rem;">⚡ Criptum21</a>
+        <a href="#" class="nav-logo"><img src="logo-criptum21.png" alt="Criptum21" style="height:56px;" /></a>
         <p>Tu referencia de finanzas e inversiones cripto para Latinoamérica. Datos en tiempo real, sin registro, sin costos.</p>
       </div>
       <div class="footer-col">
