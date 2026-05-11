@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://criptum21.netlify.app/sitemap.xml
+Sitemap: https://criptum21.arancibia-recabarren.workers.dev/sitemap.xml
